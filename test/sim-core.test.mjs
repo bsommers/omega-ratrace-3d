@@ -60,7 +60,7 @@ test('wave progression + buildWave ramp + death rat', () => {
 });
 
 test('lives, dying, respawn, gameover', () => {
-  const g = createGame({ seed: 1 }); g.ship.invuln = 0;
+  const g = createGame({ seed: 1, difficulty: 'classic' }); g.ship.invuln = 0;
   for (let n = 0; n < 3; n++) {
     g.ship.invuln = 0; g.spawn('mouse', { x: g.ship.x, y: g.ship.y });
     g.update(T, {}); assert.equal(g.state, 'dying');

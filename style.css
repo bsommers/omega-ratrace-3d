@@ -153,3 +153,11 @@ body {
 .t-left { left: 14px; bottom: 28px; } .t-right { left: 100px; bottom: 28px; }
 .t-thrust { right: 100px; bottom: 28px; } .t-fire { right: 14px; bottom: 28px; width: 84px; height: 84px; }
 .t-bomb { right: 14px; bottom: 124px; border-color: var(--neon-magenta); }
+
+/* hull pips */
+.hull { display: flex; gap: 3px; align-items: center; flex-wrap: wrap; max-width: 30vw; --hc: #4dff9a; }
+.hull[data-lvl="warn"] { --hc: #ffb02e; } .hull[data-lvl="crit"] { --hc: #ff2d55; }
+.hull i { width: clamp(8px, 1.2vw, 14px); height: clamp(10px, 1.6vw, 18px); border: 1px solid var(--hc); border-radius: 2px; opacity: .45; }
+.hull i.on { background: var(--hc); opacity: 1; box-shadow: 0 0 6px var(--hc); }
+.diff { display: block; margin: 8px 0; }
+.lifehull { display: flex; gap: 14px; align-items: center; }

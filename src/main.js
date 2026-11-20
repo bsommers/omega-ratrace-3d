@@ -1,5 +1,5 @@
 // Omega Ratrace 3D entry: fixed-step loop wiring sim + renderer + audio + UI. URL: autostart seed wave quality bot debug mute
-import { TICK, W, H, PALETTE } from './core/defs.js';
+import { TICK, W, H, PALETTE, DIFFICULTY } from './core/defs.js';
 import { createBus } from './core/events.js';
 import { getSettings, setSettings } from './core/settings.js';
 import { createInput, isTouchDevice } from './core/input.js';
@@ -15,6 +15,7 @@ const P = new URLSearchParams(location.search);
 const num = (k, d) => (P.has(k) && Number.isFinite(+P.get(k)) ? +P.get(k) : d);
 const flag = k => P.has(k) && P.get(k) !== '0' && P.get(k) !== 'false';
 const opt = { autostart: flag('autostart'), seed: num('seed', (Date.now() & 0xffff) || 1), wave: Math.max(1, num('wave', 1) | 0), bot: flag('bot'), debug: flag('debug') };
+if (P.has('difficulty') && (P.get('difficulty') in DIFFICULTY)) setSettings({ difficulty: P.get('difficulty') });
 if (P.has('quality')) setSettings({ quality: P.get('quality') });
 if (flag('mute')) setSettings({ muted: true });
 
@@ -69,7 +70,7 @@ async function boot() {
 
   let g = null, mode = 'title', hitstop = 0, overT = 0, acc = 0, last = performance.now(), frames = 0, fpsT = 0, fps = 0;
   bus.on('hitstop', p => { hitstop = Math.max(hitstop, (p?.ms ?? 0) / 1000); });
-  const newGame = () => { g = createGame({ seed: opt.seed, bus, startWave: opt.wave }); window.__game = g; };
+  const newGame = () => { g = createGame({ seed: opt.seed, bus, startWave: opt.wave, difficulty: getSettings().difficulty }); window.__game = g; };
   const options = createOptions(ui, { onChange: (k, v, s) => { if (k === 'quality') renderer.setQuality?.(v); applyAudio(); }, onClose: () => { if (mode === 'paused') screens.showPause(); else if (mode === 'title') screens.showTitle(); } });
   const screens = createScreens(ui, {
     onStart: () => start(), onResume: () => setPaused(false), onOptions: () => { screens.hide(); options.show(); },

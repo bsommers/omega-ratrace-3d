@@ -1,5 +1,5 @@
 // Simulation core. No three.js, no DOM. Randomness only via g.rng.
-import { W, H, BOX, TICK, TUNING, KINDS } from '../core/defs.js';
+import { W, H, BOX, TICK, TUNING, KINDS, DIFFICULTY, DIFFICULTY_DEFAULT, HIT_INVULN } from '../core/defs.js';
 import { createRng } from '../core/rng.js';
 import { createBus } from '../core/events.js';
 import { makeShip, updateShip } from './player.js';
@@ -16,13 +16,16 @@ export { buildWave };
 
 const ENEMY = new Set(['mouse', 'rat', 'commander', 'mine']);
 
-export function createGame({ seed = 1, bus = createBus(), startWave: startWaveN = 1 } = {}) {
+export function createGame({ seed = 1, bus = createBus(), startWave: startWaveN = 1, difficulty = DIFFICULTY_DEFAULT } = {}) {
+  if (!Object.hasOwn(DIFFICULTY, difficulty)) difficulty = DIFFICULTY_DEFAULT;
+  const hullMax = DIFFICULTY[difficulty].hull;
   const g = {
-    bus, rng: createRng(seed), seed,
+    bus, rng: createRng(seed), seed, difficulty,
     t: 0, state: 'intro', wave: startWaveN, score: 0, hiscore: 0, lives: TUNING.lives, bombs: TUNING.ship.bombs,
     combo: 0, comboT: 0, ship: makeShip(), ents: [],
     _id: 1, _fireCd: 0, _extraIdx: 0, _stateT: 0, _waveT: 0, _queue: [], _spawnCd: 0, _deathRat: false,
   };
+  g.ship.hull = g.ship.hullMax = hullMax;
   const emit = (t, p) => bus.emit(t, p);
   g.sfx = (name) => emit('sfx', { name });
   g.fx = (type, x, y, opts = {}) => emit('fx', { type, x, y, opts });
@@ -88,14 +91,14 @@ export function createGame({ seed = 1, bus = createBus(), startWave: startWaveN 
 
   function respawnShip() {
     const s = g.ship;
-    Object.assign(s, { x: W / 2, y: 70, vx: 0, vy: 0, angle: 0, alive: true, invuln: TUNING.ship.invulnAfterDeath, thrusting: false });
+    Object.assign(s, { x: W / 2, y: 70, vx: 0, vy: 0, angle: 0, alive: true, invuln: TUNING.ship.invulnAfterDeath, thrusting: false, hull: s.hullMax, hitT: 0 });
     for (let i = g.ents.length - 1; i >= 0; i--) if (g.ents[i].kind === 'ebullet') g.ents[i].dead = true;
   }
 
   function killShip() {
     const s = g.ship;
     if (!s.alive || s.invuln > 0 || g.state === 'gameover') return;
-    s.alive = false; s.thrusting = false;
+    s.alive = false; s.thrusting = false; s.hull = 0;
     g.lives = Math.max(0, g.lives - 1);
     emit('life', { lives: g.lives });
     g.fx('boom_big', s.x, s.y, { kind: 'colby' }); g.sfx('death'); g.shake(10, 0.5);
@@ -103,6 +106,22 @@ export function createGame({ seed = 1, bus = createBus(), startWave: startWaveN 
     resetCombo(g);
     g._prevState = g.state;
     g.state = 'dying'; g._dyingT = TUNING.ship.dyingTime;
+  }
+
+  /** One hit from `src`. dmg hull points; deathrat removes 2 but leaves 1 unless already at 1. */
+  function damageShip(src, dmg) {
+    const s = g.ship;
+    if (!s.alive || s.invuln > 0 || g.state === 'gameover') return;
+    if (s.hull <= dmg && !(src && src.kind === 'deathrat' && s.hull > 1)) { s.hull = 0; killShip(); return; }
+    s.hull = Math.max(1, s.hull - dmg);
+    s.invuln = Math.max(s.invuln, HIT_INVULN); s.hitT = 0.3;
+    if (src) { // knock-back away from the source
+      const dx = s.x - src.x, dy = s.y - src.y, d = Math.hypot(dx, dy) || 1;
+      s.vx += dx / d * 140; s.vy += dy / d * 140;
+    }
+    g.sfx('hit'); g.fx('spark', s.x, s.y, {}); g.shake(5, 0.2);
+    emit('flash', { color: '#ff2d55', a: 0.3, dur: 0.2 });
+    emit('hull', { hull: s.hull, hullMax: s.hullMax });
   }
 
   g.bomb = () => {
@@ -144,7 +163,7 @@ export function createGame({ seed = 1, bus = createBus(), startWave: startWaveN 
           if (s.invuln > 0) continue;
           if (e.kind === 'ebullet') g.kill(e, { silent: true });
           else if (e.kind !== 'deathrat') g.kill(e);
-          killShip(); return;
+          damageShip(e, e.kind === 'deathrat' ? 2 : 1); return;
         }
       }
     }
@@ -234,7 +253,7 @@ export function createGame({ seed = 1, bus = createBus(), startWave: startWaveN 
     let h = 0x811c9dc5 >>> 0;
     const mix = (v) => { h = Math.imul(h ^ (Math.round(v * 1000) | 0), 0x01000193) >>> 0; };
     const s = g.ship;
-    [g.t, g.score, g.lives, g.bombs, g.combo, g.wave, s.x, s.y, s.vx, s.vy, s.angle, s.alive ? 1 : 0, s.invuln, g.rng.state].forEach(mix);
+    [g.t, g.score, g.lives, g.bombs, g.combo, g.wave, s.hull, s.x, s.y, s.vx, s.vy, s.angle, s.alive ? 1 : 0, s.invuln, g.rng.state].forEach(mix);
     for (const e of g.ents) [e.id, e.x, e.y, e.vx, e.vy, e.hp, e.t].forEach(mix);
     for (const c of g.state) mix(c.charCodeAt(0));
     return h.toString(16).padStart(8, '0');

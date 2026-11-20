@@ -26,6 +26,17 @@ Tuna gives +500 and +1 yarn bomb (max 3); it vanishes after 8 s. A yarn bomb cle
 ## Lives and score
 Extra lives at 10,000, 30,000 and every 30,000 after. After a death you are invulnerable for 2.5 s. High scores (arcade initials) are saved in your browser.
 
+## Hull and difficulty
+Colby has a hull per life. Any hit (enemy, pellet, mine, Death Rat) removes 1 hull point, knocks you back, and gives about 1 s of blinking invulnerability. The Death Rat removes 2 (but never takes your last point). At 0 hull you lose a life; hull refills on respawn. Hull pips sit beside the lives (green, amber, red). Pick difficulty on the title screen or in Options, or with `?difficulty=`:
+
+| Level | Hull |
+|---|---|
+| hard | 3 |
+| normal (default) | 5 |
+| easy | 8 |
+| kitten | 13 |
+| classic (URL only) | 1, as in the 2D game |
+
 ## Tips
 - Stay out of the far lane behind the box; enemies that bounce vertically there are hard to reach, so relocate.
 - Over-dodging stalls kills. Dodge close threats only (bot tuning: radius 70 beat 95 and 130).

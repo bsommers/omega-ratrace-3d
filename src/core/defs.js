@@ -21,6 +21,15 @@ export const TUNING = Object.freeze({
   restitution: { mouse: 1, rat: 0.9, commander: 0.9, mine: 0.6, deathrat: 1 },
 });
 
+// 3D-only deviation from the 2D game (TUNING default there = 1 hit). `classic` = 2D-compatible, hidden from the menu.
+export const DIFFICULTY = Object.freeze({
+  hard: Object.freeze({ hull: 3 }), normal: Object.freeze({ hull: 5 }), easy: Object.freeze({ hull: 8 }), kitten: Object.freeze({ hull: 13 }),
+  classic: Object.freeze({ hull: 1, hidden: true }),
+});
+export const DIFFICULTY_DEFAULT = 'normal';
+export const DIFFICULTY_MENU = Object.freeze(['hard', 'normal', 'easy', 'kitten']);
+export const HIT_INVULN = 1.0;
+
 export const KINDS = Object.freeze({
   mouse:     { r: 10, hp: 1,  score: 100, speed: 90,  desc: 'Droid mouse: straight lines, bounces off walls' },
   rat:       { r: 12, hp: 2,  score: 250, speed: 140, desc: 'Chaser rat: homes on Colby' },
@@ -38,6 +47,6 @@ export const SFX = Object.freeze(['thrust', 'fire', 'bounce', 'hit', 'boom_small
   'wave_start', 'wave_clear', 'extralife', 'deathrat_warn', 'menu_move', 'menu_select', 'gameover', 'hiscore', 'launch']);
 export const MUSIC = Object.freeze(['title', 'wave_a', 'wave_b', 'gameover', 'hiscore']);
 export const EVENTS = Object.freeze(['sfx', 'music', 'fx', 'shake', 'flash', 'hitstop', 'popup', 'wave', 'banner', 'score', 'life', 'bombs',
-  'combo', 'gameover', 'pause', 'taunt']);
+  'combo', 'gameover', 'pause', 'taunt', 'hull']);
 export const FX_TYPES = Object.freeze(['boom_small', 'boom_big', 'crumbs', 'spark', 'ring', 'thrust', 'trail', 'launch', 'confetti']);
 export const QUALITY = Object.freeze(['low', 'medium', 'high', 'ultra']);

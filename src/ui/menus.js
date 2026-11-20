@@ -1,5 +1,5 @@
 // Options menu (quality, volumes, mute, shake). Panel DOM; persists via core/settings.
-import { QUALITY } from '../core/defs.js';
+import { QUALITY, DIFFICULTY_MENU, DIFFICULTY_DEFAULT, DIFFICULTY } from '../core/defs.js';
 import { getSettings, setSettings } from '../core/settings.js';
 export function createOptions(root, { onChange, onClose } = {}) {
   const el = document.createElement('div'); el.className = 'screen options hidden';
@@ -7,6 +7,7 @@ export function createOptions(root, { onChange, onClose } = {}) {
   el.innerHTML = `<div class="neon-panel menu">
     <h2>OPTIONS</h2>
     <label>Quality <select data-o="quality">${QUALITY.map(q => `<option${q === s.quality ? ' selected' : ''}>${q}</option>`).join('')}</select></label>
+    <label>Difficulty <select data-o="difficulty">${DIFFICULTY_MENU.map(d => `<option value="${d}"${d === (s.difficulty || DIFFICULTY_DEFAULT) ? ' selected' : ''}>${d} (${DIFFICULTY[d].hull} hits)</option>`).join('')}</select></label>
     <label>Master <input type="range" min="0" max="1" step="0.05" data-o="master" value="${s.master}"></label>
     <label>SFX <input type="range" min="0" max="1" step="0.05" data-o="sfx" value="${s.sfx}"></label>
     <label>Music <input type="range" min="0" max="1" step="0.05" data-o="music" value="${s.music}"></label>

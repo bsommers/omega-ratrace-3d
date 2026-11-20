@@ -9,7 +9,8 @@ export function createHud(root, bus) {
       <div class="hud-cell hud-right"><span class="lbl">HI</span><span class="val" data-k="hi">000000</span></div>
     </div>
     <div class="hud-bottom">
-      <div class="lives" data-k="lives" aria-label="lives"></div>
+      <div class="lifehull"><div class="lives" data-k="lives" aria-label="lives"></div>
+      <div class="hull" data-k="hull" aria-label="hull"></div></div>
       <div class="combo hidden" data-k="combo"></div>
       <div class="bombs" data-k="bombs" aria-label="bombs"></div>
     </div>
@@ -19,7 +20,7 @@ export function createHud(root, bus) {
     <div class="dbg hidden" data-k="dbg"></div>`;
   root.appendChild(el);
   const q = k => el.querySelector(`[data-k="${k}"]`);
-  const E = { score: q('score'), wave: q('wave'), wname: q('wname'), hi: q('hi'), lives: q('lives'), bombs: q('bombs'), combo: q('combo'),
+  const E = { score: q('score'), wave: q('wave'), wname: q('wname'), hi: q('hi'), lives: q('lives'), hull: q('hull'), bombs: q('bombs'), combo: q('combo'),
     taunt: q('taunt'), banner: q('banner'), popups: q('popups'), dbg: q('dbg') };
   const cache = {}; let tauntT, bannerT;
   const set = (k, v, fn) => { if (cache[k] !== v) { cache[k] = v; fn(v); } };
@@ -45,6 +46,9 @@ export function createHud(root, bus) {
       set('hi', Math.max(g.hiscore, g.score), v => E.hi.textContent = pad(v));
       set('wave', g.wave, v => E.wave.textContent = v);
       set('lives', g.lives, v => E.lives.innerHTML = fit(v, cat));
+      { const hp = g.ship?.hull ?? 0, hm = g.ship?.hullMax ?? 0, key = hp + '/' + hm;
+        set('hull', key, () => { const f = hm ? hp / hm : 0; E.hull.dataset.lvl = f > 0.6 ? 'ok' : f > 0.3 ? 'warn' : 'crit';
+          E.hull.innerHTML = Array.from({ length: hm }, (_, i) => `<i class="${i < hp ? 'on' : ''}"></i>`).join(''); E.hull.setAttribute('aria-label', `hull ${hp} of ${hm}`); }); }
       set('bombs', g.bombs, v => E.bombs.innerHTML = fit(v, tuna));
       set('combo', g.combo, v => { E.combo.textContent = v > 1 ? 'x' + v : ''; E.combo.classList.toggle('hidden', !(v > 1)); });
       if (dbg) { E.dbg.classList.remove('hidden'); E.dbg.textContent = dbg; }
