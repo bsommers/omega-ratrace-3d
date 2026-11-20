@@ -279,6 +279,24 @@ def export_stl(name, longest_mm, skip=('Whisker', 'Armed', 'Tab'), voxel_mm=0.5)
     ob.data.transform(Matrix.Rotation(math.pi / 2, 4, 'X'))  # Y-up (glTF) -> Z-up (printer)
     bm = bmesh.new()
     bm.from_mesh(ob.data)
+    # drop tiny stray islands (voxel-remesh slivers); keep only the largest connected shell
+    comps, seenv = [], set()
+    for v in bm.verts:
+        if v in seenv:
+            continue
+        seenv.add(v)
+        comp, stack = [v], [v]
+        while stack:
+            for e in stack.pop().link_edges:
+                for x in e.verts:
+                    if x not in seenv:
+                        seenv.add(x)
+                        comp.append(x)
+                        stack.append(x)
+        comps.append(comp)
+    if len(comps) > 1:
+        comps.sort(key=len, reverse=True)
+        bmesh.ops.delete(bm, geom=[v for c in comps[1:] for v in c], context='VERTS')
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     nonman = sum(1 for e in bm.edges if not e.is_manifold)
     vol = bm.calc_volume(signed=True)

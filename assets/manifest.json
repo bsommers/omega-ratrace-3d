@@ -1,39 +1,39 @@
 {
- "generated": "2026-11-20T11:27:12.878Z",
+ "generated": "2026-11-20T11:29:08.691Z",
  "triBudget": 40000,
  "models": {
   "colby": {
    "glb": {
     "ok": true,
     "errors": [],
-    "bytes": 1380444,
-    "tris": 7902,
-    "meshes": 16,
-    "primitives": 16,
-    "materials": 6,
-    "images": 3,
-    "nodes": 17,
-    "namedNodes": 17,
-    "bboxM": [
-     0.412,
-     0.315,
-     0.233
+    "bytes": 1996348,
+    "tris": 35160,
+    "meshes": 21,
+    "primitives": 21,
+    "materials": 9,
+    "images": 0,
+    "nodes": 22,
+    "namedNodes": 22,
+    "meshBboxM": [
+     0.443,
+     0.334,
+     0.25
     ]
    },
    "stl": {
     "ok": true,
     "errors": [],
-    "faces": 72324,
-    "verts": 36164,
+    "faces": 50576,
+    "verts": 25290,
     "shells": 1,
     "nonManifoldEdges": 0,
-    "volumeMm3": 161724.54,
+    "volumeMm3": 132205.61,
     "bboxMm": [
-     121.429,
-     82.399,
-     63.139
+     132.821,
+     48.14,
+     71.694
     ],
-    "minWallMm": 4.706
+    "minWallMm": 7.063
    }
   },
   "mouse": {
@@ -48,7 +48,7 @@
     "images": 4,
     "nodes": 23,
     "namedNodes": 23,
-    "bboxM": [
+    "meshBboxM": [
      2,
      2,
      2
@@ -82,7 +82,7 @@
     "images": 4,
     "nodes": 23,
     "namedNodes": 23,
-    "bboxM": [
+    "meshBboxM": [
      2,
      2,
      2
@@ -116,7 +116,7 @@
     "images": 6,
     "nodes": 33,
     "namedNodes": 33,
-    "bboxM": [
+    "meshBboxM": [
      2,
      2,
      2
@@ -150,7 +150,7 @@
     "images": 4,
     "nodes": 23,
     "namedNodes": 23,
-    "bboxM": [
+    "meshBboxM": [
      2,
      2,
      2
@@ -184,20 +184,18 @@
     "images": 2,
     "nodes": 3,
     "namedNodes": 3,
-    "bboxM": [
+    "meshBboxM": [
      2,
      2,
      2
     ]
    },
    "stl": {
-    "ok": false,
-    "errors": [
-     "shells=3"
-    ],
-    "faces": 100946,
-    "verts": 50473,
-    "shells": 3,
+    "ok": true,
+    "errors": [],
+    "faces": 100938,
+    "verts": 50465,
+    "shells": 1,
     "nonManifoldEdges": 0,
     "volumeMm3": 41724.33,
     "bboxMm": [
@@ -205,7 +203,7 @@
      60,
      16.5
     ],
-    "minWallMm": 2.458
+    "minWallMm": 2.682
    }
   },
   "tuna": {
@@ -220,7 +218,7 @@
     "images": 4,
     "nodes": 7,
     "namedNodes": 7,
-    "bboxM": [
+    "meshBboxM": [
      0.364,
      0.139,
      0.364
@@ -254,7 +252,7 @@
     "images": 2,
     "nodes": 10,
     "namedNodes": 10,
-    "bboxM": [
+    "meshBboxM": [
      2,
      2,
      2
@@ -288,7 +286,7 @@
     "images": 2,
     "nodes": 2,
     "namedNodes": 2,
-    "bboxM": [
+    "meshBboxM": [
      0.133,
      0.128,
      0.127
@@ -314,17 +312,17 @@
    "glb": {
     "ok": true,
     "errors": [],
-    "bytes": 1149512,
-    "tris": 1172,
-    "meshes": 2,
-    "primitives": 2,
+    "bytes": 2305948,
+    "tris": 1328,
+    "meshes": 3,
+    "primitives": 3,
     "materials": 2,
     "images": 2,
-    "nodes": 3,
-    "namedNodes": 3,
-    "bboxM": [
+    "nodes": 4,
+    "namedNodes": 4,
+    "meshBboxM": [
      8.4,
-     2.2,
+     2.94,
      3.8
     ]
    },
@@ -348,7 +346,7 @@
    "glb": {
     "ok": true,
     "errors": [],
-    "bytes": 670084,
+    "bytes": 1793568,
     "tris": 60,
     "meshes": 5,
     "primitives": 5,
@@ -356,7 +354,7 @@
     "images": 7,
     "nodes": 6,
     "namedNodes": 6,
-    "bboxM": [
+    "meshBboxM": [
      16.6,
      0.7,
      9.6
@@ -379,8 +377,6 @@
    }
   }
  },
- "errors": [
-  "mine.stl: shells=3"
- ],
- "ok": false
+ "errors": [],
+ "ok": true
 }
