@@ -86,7 +86,7 @@ Per ARCHITECTURE §7: Blender-headless validator (re-import every assets/print/*
 
 ## integrate | sonnet | p3 | integration | Integration and polish
 owns: docs/INTEGRATION-NOTES.md, tools/build-web.mjs
-Wire everything, run `npm test`, `node tools/check-imports.mjs`, botplay, screenshots at low/high/ultra; fix cross-module contract drift by minimal edits (you may edit any file; record each edit in the notes). Build single deployable `dist/web/` with assets via tools/build-web.mjs. Confirm 60 fps target on `high` where hardware allows, report numbers.
+Wire everything (render-post requests to render-scene: on resize call fx.setViewportHeight(canvas.clientHeight) and post.resize(w,h); call lighting.setQuality/fx.setQuality along with post.setQuality; set castShadow/receiveShadow on meshes; verify sim-enemies against the real game.js and main calls setBehaviors(BEHAVIORS)), run `npm test`, `node tools/check-imports.mjs`, botplay, screenshots at low/high/ultra; fix cross-module contract drift by minimal edits (you may edit any file; record each edit in the notes). Build single deployable `dist/web/` with assets via tools/build-web.mjs. Confirm 60 fps target on `high` where hardware allows, report numbers.
 
 ## review | sonnet | p3 | review | Code and docs review
 owns: README.md, docs/HOW-TO-PLAY.md, docs/LEARNINGS.md
