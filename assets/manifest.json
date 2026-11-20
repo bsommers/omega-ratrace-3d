@@ -1,0 +1,386 @@
+{
+ "generated": "2026-11-20T11:27:12.878Z",
+ "triBudget": 40000,
+ "models": {
+  "colby": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 1380444,
+    "tris": 7902,
+    "meshes": 16,
+    "primitives": 16,
+    "materials": 6,
+    "images": 3,
+    "nodes": 17,
+    "namedNodes": 17,
+    "bboxM": [
+     0.412,
+     0.315,
+     0.233
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 72324,
+    "verts": 36164,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 161724.54,
+    "bboxMm": [
+     121.429,
+     82.399,
+     63.139
+    ],
+    "minWallMm": 4.706
+   }
+  },
+  "mouse": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 1436060,
+    "tris": 7412,
+    "meshes": 22,
+    "primitives": 22,
+    "materials": 6,
+    "images": 4,
+    "nodes": 23,
+    "namedNodes": 23,
+    "bboxM": [
+     2,
+     2,
+     2
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 29136,
+    "verts": 14570,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 11863.91,
+    "bboxMm": [
+     79.511,
+     23.103,
+     27.519
+    ],
+    "minWallMm": 2.183
+   }
+  },
+  "rat": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 1413336,
+    "tris": 7412,
+    "meshes": 22,
+    "primitives": 22,
+    "materials": 6,
+    "images": 4,
+    "nodes": 23,
+    "namedNodes": 23,
+    "bboxM": [
+     2,
+     2,
+     2
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 34036,
+    "verts": 17020,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 14856.16,
+    "bboxMm": [
+     89.69,
+     24.898,
+     28.771
+    ],
+    "minWallMm": 2.385
+   }
+  },
+  "commander": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 2101976,
+    "tris": 8772,
+    "meshes": 32,
+    "primitives": 32,
+    "materials": 8,
+    "images": 6,
+    "nodes": 33,
+    "namedNodes": 33,
+    "bboxM": [
+     2,
+     2,
+     2
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 43068,
+    "verts": 21532,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 20590.73,
+    "bboxMm": [
+     99.551,
+     27.68,
+     32.008
+    ],
+    "minWallMm": 2.189
+   }
+  },
+  "deathrat": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 1217056,
+    "tris": 7412,
+    "meshes": 22,
+    "primitives": 22,
+    "materials": 6,
+    "images": 4,
+    "nodes": 23,
+    "namedNodes": 23,
+    "bboxM": [
+     2,
+     2,
+     2
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 49372,
+    "verts": 24688,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 25825.55,
+    "bboxMm": [
+     109.658,
+     30.008,
+     34.297
+    ],
+    "minWallMm": 2.896
+   }
+  },
+  "mine": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 753580,
+    "tris": 2262,
+    "meshes": 2,
+    "primitives": 2,
+    "materials": 2,
+    "images": 2,
+    "nodes": 3,
+    "namedNodes": 3,
+    "bboxM": [
+     2,
+     2,
+     2
+    ]
+   },
+   "stl": {
+    "ok": false,
+    "errors": [
+     "shells=3"
+    ],
+    "faces": 100946,
+    "verts": 50473,
+    "shells": 3,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 41724.33,
+    "bboxMm": [
+     60,
+     60,
+     16.5
+    ],
+    "minWallMm": 2.458
+   }
+  },
+  "tuna": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 1068352,
+    "tris": 1320,
+    "meshes": 6,
+    "primitives": 6,
+    "materials": 4,
+    "images": 4,
+    "nodes": 7,
+    "namedNodes": 7,
+    "bboxM": [
+     0.364,
+     0.139,
+     0.364
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 70864,
+    "verts": 35434,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 37593.08,
+    "bboxMm": [
+     60,
+     60,
+     13.598
+    ],
+    "minWallMm": 13.209
+   }
+  },
+  "yarn": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 568728,
+    "tris": 10700,
+    "meshes": 9,
+    "primitives": 9,
+    "materials": 2,
+    "images": 2,
+    "nodes": 10,
+    "namedNodes": 10,
+    "bboxM": [
+     2,
+     2,
+     2
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 101884,
+    "verts": 50944,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 53240.63,
+    "bboxMm": [
+     69.725,
+     52.43,
+     48.981
+    ],
+    "minWallMm": 3.049
+   }
+  },
+  "hairball": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 596440,
+    "tris": 320,
+    "meshes": 1,
+    "primitives": 1,
+    "materials": 1,
+    "images": 2,
+    "nodes": 2,
+    "namedNodes": 2,
+    "bboxM": [
+     0.133,
+     0.128,
+     0.127
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 48070,
+    "verts": 24037,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 10826.18,
+    "bboxMm": [
+     29.823,
+     28.537,
+     28.721
+    ],
+    "minWallMm": 21.567
+   }
+  },
+  "mousehole": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 1149512,
+    "tris": 1172,
+    "meshes": 2,
+    "primitives": 2,
+    "materials": 2,
+    "images": 2,
+    "nodes": 3,
+    "namedNodes": 3,
+    "bboxM": [
+     8.4,
+     2.2,
+     3.8
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 419810,
+    "verts": 209907,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 487719.33,
+    "bboxMm": [
+     168,
+     76,
+     44
+    ],
+    "minWallMm": 11.173
+   }
+  },
+  "arena": {
+   "glb": {
+    "ok": true,
+    "errors": [],
+    "bytes": 670084,
+    "tris": 60,
+    "meshes": 5,
+    "primitives": 5,
+    "materials": 2,
+    "images": 7,
+    "nodes": 6,
+    "namedNodes": 6,
+    "bboxM": [
+     16.6,
+     0.7,
+     9.6
+    ]
+   },
+   "stl": {
+    "ok": true,
+    "errors": [],
+    "faces": 439980,
+    "verts": 219992,
+    "shells": 1,
+    "nonManifoldEdges": 0,
+    "volumeMm3": 63851.03,
+    "bboxMm": [
+     200,
+     115.663,
+     8.434
+    ],
+    "minWallMm": 2.009
+   }
+  }
+ },
+ "errors": [
+  "mine.stl: shells=3"
+ ],
+ "ok": false
+}

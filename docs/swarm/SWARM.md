@@ -76,6 +76,10 @@ owns: index.html, style.css, src/main.js, src/core/input.js, src/ui/hud.js, src/
 owns: tools/blender/colby.py, tools/blender/mice.py, assets/models/colby.glb, assets/models/mouse.glb, assets/models/rat.glb, assets/models/commander.glb, assets/models/deathrat.glb, assets/print/colby.stl, assets/print/mouse.stl, assets/print/rat.stl, assets/print/commander.stl, assets/print/deathrat.stl
 Current models are smooth stylised ellipsoids (see out/previews/colby.png, commander.png). Rebuild for photoreal: Colby with a proper cat silhouette (head with muzzle, haunches, four paws tucked in flight, curved tail ending in the engine flame), real fur (particle hair baked to cards or dense strand geometry plus fur-shader PBR with sheen) in Colby Jack marbling; mice/rats with sculpted heads, hair, translucent ears, glossy wet eyes, thin tails. Fix mouse size to about 0.2 m body (radius KINDS.r*0.02, tail excluded from the collision size). Keep GLB nodes (Flame, Armed, etc.), triangle budget, +X nose, and watertight single-shell STL. Update test/blender-*.test.mjs accordingly.
 
+## fix-mine | sonnet | p3 | asset | Fix mine.stl shells
+owns: tools/blender/props.py, assets/models/mine.glb, assets/models/tuna.glb, assets/models/yarn.glb, assets/models/hairball.glb, assets/print/mine.stl
+tools/validate-assets.mjs reports assets/print/mine.stl has 3 disjoint shells. Fuse them into one watertight shell (voxel remesh/boolean union with a base or bridges, min wall >= 1.2 mm), keep mine.glb nodes (`Armed`). Re-run `node tools/validate-assets.mjs` until the whole run exits 0 (other STLs must still pass; do not edit files you do not own, report any other failures).
+
 ## qa-bot | sonnet | p3 | qa | Autopilot and bot tests
 owns: src/sim/autopilot.js, tools/botplay.mjs
 Deterministic autopilot (aim at nearest threat, thrust to dodge, fire) and `tools/botplay.mjs --waves N --seed S` reporting waves reached, deaths, score, state hash; proves determinism and that waves 1-5 are survivable but not trivial; flags tuning problems.
