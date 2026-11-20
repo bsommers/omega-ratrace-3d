@@ -20,5 +20,5 @@ The gallery images are `docs/site/img/shot-*.png` (menu, play at high/ultra/low)
 
 ## Notes
 
-- The STL files are about 68 MB; they are copied into the site but not into `play/`.
+- The STL files are about 62 MB; they are copied into the site but not into `play/`.
 - `play/assets/manifest.json` feeds the asset table on the landing page.
