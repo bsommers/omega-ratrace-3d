@@ -1,7 +1,7 @@
 # Swarm manifest — Omega Ratrace 3D
 
 `node tools/swarm-tracker/bin/swarm-plan.mjs` -> `docs/swarm/prompts/<id>.md` + `.tracker/plan.json`.
-Spawn each agent with: "Read {{root}}/docs/swarm/prompts/<id>.md and execute it exactly." Max 4 concurrent. Waves: p1 (foundation) -> p2 (render/ui/audio/assets) -> p3 (integration, QA, docs).
+Spawn each agent with: "Read {{root}}/docs/swarm/prompts/<id>.md and execute it exactly." Max 4 concurrent. Waves: p1 (foundation) -> p2 (render/ui/audio/assets) -> p3 (integration, QA, models) -> p4 (release: screenshots, site, review, tag, GitHub Pages).
 
 ## @meta
 project: Omega Ratrace 3D
@@ -88,6 +88,14 @@ Per ARCHITECTURE §7: Blender-headless validator (re-import every assets/print/*
 owns: docs/INTEGRATION-NOTES.md, tools/build-web.mjs
 Wire everything (render-post requests to render-scene: on resize call fx.setViewportHeight(canvas.clientHeight) and post.resize(w,h); call lighting.setQuality/fx.setQuality along with post.setQuality; set castShadow/receiveShadow on meshes; verify sim-enemies against the real game.js and main calls setBehaviors(BEHAVIORS)), run `npm test`, `node tools/check-imports.mjs`, botplay, screenshots at low/high/ultra; fix cross-module contract drift by minimal edits (you may edit any file; record each edit in the notes). Build single deployable `dist/web/` with assets via tools/build-web.mjs. Confirm 60 fps target on `high` where hardware allows, report numbers.
 
-## review | sonnet | p3 | review | Code and docs review
-owns: README.md, docs/HOW-TO-PLAY.md, docs/LEARNINGS.md
-Review the whole repo for bugs/contract drift (read-only except owned docs), write README (screens, controls, quality tiers, asset pipeline, tracker, layout), HOW-TO-PLAY, and LEARNINGS. Report findings you did not fix in docs/swarm/reports/review.md.
+## screenshots | sonnet | p4 | docs | Release screenshots
+owns: docs/screenshots/, docs/site/img/, tools/capture-screens.mjs
+After integrate and models-v2 are done: script `tools/capture-screens.mjs` (headless Chrome via tools/shot.mjs, swiftshader) that captures title, gameplay mid-wave with enemies/hairballs/FX, a Death Rat moment, pause, game over, and quality low vs ultra comparison, into docs/screenshots/ (1600x900 PNG, optimised, copy hero + 4 more into docs/site/img/). Also copy Blender preview renders of Colby and the rodents (out/previews) into docs/screenshots/models/ and make a contact sheet. View each shot at most once; reshoot if the framing is bad (use ?seed/?wave/?bot=1 for good moments).
+
+## site | sonnet | p4 | docs | GitHub Pages site and build
+owns: docs/site/, .github/workflows/pages.yml, tools/build-site.mjs, docs/BUILD.md, LICENSE, tools/build-web.mjs
+Mirror catxzzon/duum conventions (see ~/src/fun/catxzzon/docs/site, .github/workflows/pages.yml, tools/build-web.mjs, docs/BUILD.md). Apache-2.0 LICENSE. tools/build-site.mjs assembles `dist/site/`: landing page (hero shot, features, controls, quality tiers, asset pipeline with STL/glTF info, screenshot gallery, download/play links) plus `play/` containing the web build (index.html, src, vendor, assets/models, assets/textures; fixed relative paths so it works under /omega-ratrace-3d/play/). GitHub Actions workflow deploys dist/site to Pages on push to main, running npm test first. Test the built site by serving dist/site and screenshotting play/ with tools/shot.mjs (no 404s).
+
+## review | sonnet | p4 | review | Code and docs review
+owns: README.md, docs/HOW-TO-PLAY.md, docs/LEARNINGS.md, docs/ARCH-OVERVIEW.md
+Write after screenshots and site are done. Review the whole repo for bugs/contract drift (read-only except owned docs), write a polished README modelled on catxzzon/duum (badges, play link https://bsommers.github.io/omega-ratrace-3d/play/, screenshot table from docs/screenshots, features, controls, URL params, quality tiers, project layout, asset pipeline + STL printing, tracker, credits, license), HOW-TO-PLAY, ARCH-OVERVIEW and LEARNINGS (include mistakes from docs/swarm/reports/*). Report unfixed findings in docs/swarm/reports/review.md.
