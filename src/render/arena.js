@@ -10,7 +10,7 @@ function cheeseTexture() {
   if (typeof document !== 'undefined') {
     const c = document.createElement('canvas'); c.width = N; c.height = Math.round(N * H / W * 1.0) || 576;
     const x = c.getContext('2d');
-    const gr = x.createLinearGradient(0, 0, c.width, c.height); gr.addColorStop(0, '#ffcf45'); gr.addColorStop(1, '#f2a91c');
+    const gr = x.createLinearGradient(0, 0, c.width, c.height); gr.addColorStop(0, '#2a2433'); gr.addColorStop(1, '#17131f');
     x.fillStyle = gr; x.fillRect(0, 0, c.width, c.height);
     for (let i = 0; i < 90; i++) { // holes
       const px = r() * c.width, py = r() * c.height, rad = 6 + r() * r() * 46;
@@ -34,7 +34,7 @@ export function buildArena({ models } = {}) {
   // floor
   const tex = cheeseTexture();
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(aw, ah),
-    new THREE.MeshPhysicalMaterial({ map: tex, color: 0x9a8c78, roughness: 0.3, metalness: 0.0, clearcoat: 0.35, clearcoatRoughness: 0.3, envMapIntensity: 0.5 }));
+    new THREE.MeshPhysicalMaterial({ map: tex, color: 0x9a8c78, roughness: 0.22, metalness: 0.1, clearcoat: 0.6, clearcoatRoughness: 0.2, envMapIntensity: 0.8 }));
   floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; floor.name = 'floor'; g.add(floor);
   const surround = new THREE.Mesh(new THREE.PlaneGeometry(80, 60), new THREE.MeshStandardMaterial({ color: 0x07050f, roughness: 0.6, metalness: 0.4 }));
   surround.rotation.x = -Math.PI / 2; surround.position.y = -0.02; surround.receiveShadow = true; g.add(surround);
@@ -59,14 +59,14 @@ export function buildArena({ models } = {}) {
 
   // Mouse Hole box
   const [bx0, bz0] = toWorld(BOX.x0, BOX.y0), [bx1, bz1] = toWorld(BOX.x1, BOX.y1);
-  const bw = bx1 - bx0, bd = bz1 - bz0, bh = 0.22;
+  const bw = bx1 - bx0, bd = bz1 - bz0, bh = 0.9;
   const box = new THREE.Group(); box.name = 'mousehole'; box.position.set((bx0 + bx1) / 2, 0, (bz0 + bz1) / 2);
   const body = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), new THREE.MeshPhysicalMaterial({ color: 0xb09060, roughness: 0.4, clearcoat: 0.3, map: tex }));
   body.position.y = bh / 2; body.castShadow = body.receiveShadow = true; box.add(body);
   const trim = (w, d2, x, z) => { const t = new THREE.Mesh(new THREE.BoxGeometry(w, 0.05, d2), neon(PALETTE.wallHot, 1.2)); t.position.set(x, bh + 0.01, z); box.add(t); };
   trim(bw, 0.06, 0, bd / 2 - 0.03); trim(bw, 0.06, 0, -bd / 2 + 0.03); trim(0.06, bd, bw / 2 - 0.03, 0); trim(0.06, bd, -bw / 2 + 0.03, 0);
   // mouse-hole door arches on the front face
-  const arch = new THREE.Mesh(new THREE.CircleGeometry(0.28, 20, 0, Math.PI), new THREE.MeshBasicMaterial({ color: 0x050308 }));
+  const arch = new THREE.Mesh(new THREE.CircleGeometry(0.4, 20, 0, Math.PI), new THREE.MeshBasicMaterial({ color: 0x050308 }));
   arch.position.set(0, 0.0, bd / 2 + 0.005); box.add(arch);
   g.add(box);
 
@@ -76,6 +76,9 @@ export function buildArena({ models } = {}) {
     const inst = models.instance(name); place?.(inst); parent.add(inst); replace.visible = false;
   };
   upgrade('arena', g, walls);
-  upgrade('mousehole', g, body, (o) => { o.position.copy(box.position); o.scale.y = 0.3; /* 2.2 m GLB squashed: tall box hid the lane behind it */ });
+  if (models?.status?.arena === 'glb') { floor.visible = false; grid.visible = false; } // GLB carries its own polished floor
+  // mousehole.glb bakes ~0.9 m height: no runtime squash
+  upgrade('mousehole', g, body, (o) => { o.position.copy(box.position); });
+  if (models?.status?.mousehole === 'glb') box.children.forEach(c => { if (c !== body) c.visible = false; });
   return g;
 }

@@ -14,7 +14,7 @@ os.makedirs(TEXD, exist_ok=True)
 S = 0.02
 AW, AH = 800 * S, 450 * S          # 16 x 9 m
 BW, BD = (610 - 190) * S, (320 - 130) * S  # 8.4 x 3.8 m
-BH = 2.2
+BH = 0.9
 WALL_H, WALL_T = 0.5, 0.3
 TILE = 2.0  # metres per floor texture tile
 
@@ -46,26 +46,37 @@ def panel_masks(n, k):
 
 
 def floor_textures(n=1024):
+    """Dark polished stone deck: 4x4 panels per 2 m tile, thin cheese-gold inlay frames in checker panels, neon guide lines on tile edges."""
     chk, seam, d = panel_masks(n, 4)
-    scr = P.fnoise(n, 260, 3, 11)              # brushed streaks
-    blot = P.fnoise(n, 8, 8, 12)
-    pores = P.fnoise(n, 55, 55, 13)
-    hole = (pores > 0.8).astype(np.float32)
-    metal = np.array([0.62, 0.65, 0.70], np.float32) * (0.78 + 0.3 * blot + 0.18 * scr)[..., None]
-    cheese = np.array([0.98, 0.72, 0.18], np.float32) * (0.85 + 0.3 * blot)[..., None]
-    cheese = cheese * (1 - 0.55 * hole[..., None])
-    m = chk[..., None]
-    alb = metal * (1 - m) + cheese * m
-    alb = alb * (1 - 0.75 * seam[..., None])
-    rivet = (np.hypot(((np.arange(n)[None, :] / n * 4 % 1) - 0.5), ((np.arange(n)[:, None] / n * 4 % 1) - 0.5)) > 0.44).astype(np.float32)
-    alb = alb * (1 - 0.35 * rivet[..., None] * (1 - m))
-    h = (scr * 0.5) * (1 - m[..., 0]) + (0.4 * P.fnoise(n, 30, 30, 14) - 0.6 * hole) * m[..., 0] - 1.2 * seam
-    nrm = P.normal_from_height(h, 6)
-    rough = (0.32 + 0.25 * scr) * (1 - m[..., 0]) + (0.55 + 0.2 * blot) * m[..., 0]
-    rough = np.clip(rough + 0.2 * seam, 0, 1)
-    mr = np.stack([np.zeros_like(rough), rough, (1 - m[..., 0])], -1)  # G=roughness B=metallic
+    u = (np.arange(n) / n * 4)[None, :] * np.ones((n, 1))
+    v = (np.arange(n) / n * 4)[:, None] * np.ones((1, n))
+    fu, fv = u % 1, v % 1
+    dd = np.minimum(np.minimum(fu, 1 - fu), np.minimum(fv, 1 - fv))   # distance to panel edge (0..0.5)
+    veins = P.fnoise(n, 12, 4, 11)
+    blot = P.fnoise(n, 6, 6, 12)
+    fine = P.fnoise(n, 120, 3, 13)
+    pores = P.fnoise(n, 70, 70, 14)
+    stone = np.array([0.11, 0.10, 0.135], np.float32) * (0.7 + 0.55 * blot + 0.35 * veins + 0.2 * fine)[..., None]
+    # inlay: thin gold frame inset 0.09 panel units, only in checker panels
+    frame = ((dd > 0.09) & (dd < 0.105)).astype(np.float32) * chk
+    holes = ((pores > 0.9) & (dd > 0.15)).astype(np.float32) * chk
+    gold = np.array([0.30, 0.19, 0.04], np.float32) * (0.8 + 0.3 * blot)[..., None]
+    alb = stone * (1 - frame[..., None]) + gold * frame[..., None]
+    alb = alb * (1 - 0.6 * holes[..., None]) * (1 - 0.7 * seam[..., None] * 0.6)
+    # neon guide line along tile edges (u,v wrap at tile edge)
+    tu, tv = np.arange(n)[None, :] / n, np.arange(n)[:, None] / n
+    te = np.minimum(np.minimum(tu, 1 - tu), np.minimum(tv, 1 - tv)) * np.ones((n, n))
+    line = np.clip(1 - te / 0.006, 0, 1).astype(np.float32)
+    glow = np.clip(1 - te / 0.03, 0, 1) ** 2 * 0.12
+    neon = np.array([0.1, 0.8, 1.0], np.float32)
+    emis = neon * (line + glow)[..., None] * 0.28
+    alb = alb * (1 - line[..., None]) + neon * 0.2 * line[..., None]
+    h = fine * 0.15 - 1.0 * seam - 0.4 * frame - 0.5 * holes
+    nrm = P.normal_from_height(h, 4)
+    rough = np.clip(0.14 + 0.35 * blot * blot + 0.22 * fine + 0.25 * frame + 0.3 * seam, 0.08, 0.9)
+    mr = np.stack([np.zeros_like(rough), rough, 0.15 + 0.7 * frame], -1)  # G=roughness B=metallic (gold inlay metallic)
     return (save_tex('arena_floor_albedo', alb, True), save_tex('arena_floor_normal', nrm),
-            save_tex('arena_floor_mr', mr))
+            save_tex('arena_floor_mr', mr), save_tex('arena_floor_emissive', emis, True))
 
 
 def wall_textures(n=1024, hgt=256):
@@ -81,7 +92,6 @@ def wall_textures(n=1024, hgt=256):
     rivet = (np.hypot((u * 16 % 1) - 0.5, ((v * 4) % 1) * 1.0 - 0.5) < 0.12).astype(np.float32) * ((v < 0.2) | (v > 0.7))
     alb = alb * (1 - 0.4 * rivet[..., None])
     neon = np.array([0.1, 0.95, 1.0], np.float32)
-    # cheese-orange accent chevrons every 0.25 tile in the strip
     seg = ((u * 8) % 1 < 0.5).astype(np.float32)
     col = neon * (1 - seg[..., None]) + np.array([1.0, 0.45, 0.08], np.float32) * seg[..., None]
     emis = col * (strip + glow)[..., None]
@@ -100,7 +110,7 @@ def cheese_textures(n=1024):
     orange = np.array([0.95, 0.45, 0.07], np.float32)
     cream = np.array([0.99, 0.88, 0.58], np.float32)
     fine = P.fnoise(n, 90, 90, 33)
-    alb = (orange * m + cream * (1 - m)) * (0.86 + 0.2 * fine)[..., None]
+    alb = (orange * m + cream * (1 - m)) * (0.62 + 0.18 * fine)[..., None]
     h = 0.5 * P.fnoise(n, 40, 40, 34) + 0.3 * fine + 0.2 * m[..., 0]
     nrm = P.normal_from_height(h, 3)
     return save_tex('mousehole_cheese_albedo', alb, True), save_tex('mousehole_cheese_normal', nrm)
@@ -186,9 +196,9 @@ def smooth_shade(ob):
 # ------------------------------------------------------------ builders
 def build_arena():
     P.reset()
-    fa, fn, fm = floor_textures()
+    fa, fn, fm, fe = floor_textures()
     wa, wn, wm, we = wall_textures()
-    floor_m = mat_pbr('ArenaFloorMat', fa, fn, fm, nstr=0.8)
+    floor_m = mat_pbr('ArenaFloorMat', fa, fn, fm, fe, nstr=0.8)
     wall_m = mat_pbr('ArenaRailMat', wa, wn, wm, we, nstr=0.9)
     fl = box('ArenaFloor', (0, -0.1, 0), (AW, 0.2, AH), floor_m)
     box_uv(fl, TILE, 0.2, TILE)
@@ -209,22 +219,22 @@ def build_mousehole():
     ca, cn = cheese_textures()
     cheese_m = mat_pbr('MouseHoleCheeseMat', ca, cn, None, rough=0.5, nstr=1.0)
     dark_m = P.material('MouseHoleDark', color=(0.01, 0.008, 0.01), rough=0.9)
-    blk = box('MouseHoleBlock', (0, BH / 2, 0), (BW, BH, BD), cheese_m, bevel=0.1)
+    blk = box('MouseHoleBlock', (0, BH / 2, 0), (BW, BH, BD), cheese_m, bevel=0.05)
     rng = random.Random(7)
     placed = []
     tries = 0
     while len(placed) < 16 and tries < 400:
         tries += 1
         face = rng.choice(['top', 'top', 'front', 'back', 'left', 'right'])
-        r = rng.uniform(0.12, 0.32)
+        r = rng.uniform(0.06, 0.16)
         if face == 'top':
             c = (rng.uniform(-BW / 2 + 0.6, BW / 2 - 0.6), BH, rng.uniform(-BD / 2 + 0.5, BD / 2 - 0.5))
         elif face in ('front', 'back'):
-            c = (rng.uniform(-BW / 2 + 0.6, BW / 2 - 0.6), rng.uniform(0.4, BH - 0.4), (BD / 2 if face == 'front' else -BD / 2))
-            if abs(c[0]) < 1.4 and c[1] < 1.9:
+            c = (rng.uniform(-BW / 2 + 0.6, BW / 2 - 0.6), rng.uniform(0.2, BH - 0.2), (BD / 2 if face == 'front' else -BD / 2))
+            if abs(c[0]) < 1.0 and c[1] < 0.9:
                 continue
         else:
-            c = ((BW / 2 if face == 'right' else -BW / 2), rng.uniform(0.4, BH - 0.4), rng.uniform(-BD / 2 + 0.5, BD / 2 - 0.5))
+            c = ((BW / 2 if face == 'right' else -BW / 2), rng.uniform(0.2, BH - 0.2), rng.uniform(-BD / 2 + 0.5, BD / 2 - 0.5))
         if any((Vector(c) - Vector(p[0])).length < r + p[1] + 0.25 for p in placed):
             continue
         placed.append((c, r))
@@ -239,8 +249,8 @@ def build_mousehole():
         o.location = c
         P.boolean(blk, o)
     # arch tunnel through the block along Z (enemies emerge from either face)
-    AR = 0.75
-    arch_w, arch_wall = AR * 2, 0.9
+    AR = 0.4
+    arch_w, arch_wall = AR * 2, 0.4
     cut = box('cut', (0, arch_wall / 2 - 0.01, 0), (arch_w, arch_wall + 0.02, BD + 1), None)
     bm = bmesh.new()
     bmesh.ops.create_cone(bm, cap_ends=True, segments=40, radius1=AR, radius2=AR, depth=BD + 1)

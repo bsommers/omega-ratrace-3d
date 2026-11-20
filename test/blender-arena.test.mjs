@@ -15,7 +15,7 @@ test('arena glb 16x9 m, floor top y=0, neon emissive', () => {
 test('mousehole glb 8.4x3.8 m', () => {
   const { j } = load('mousehole'); const [x, y, z] = ext(j);
   assert.ok(Math.abs(x[1] - x[0] - 8.4) < 0.01 && Math.abs(z[1] - z[0] - 3.8) < 0.01);
-  const bk = j.accessors.find(a => a.type === 'VEC3' && a.min && a.max[1] > 2); assert.ok(bk && Math.abs(bk.min[1]) < 1e-3 && Math.abs(bk.max[1] - 2.2) < 1e-3);
+  const bk = j.accessors.find(a => a.type === 'VEC3' && a.min && a.max[1] > 0.85); assert.ok(bk && Math.abs(bk.min[1]) < 1e-3 && Math.abs(bk.max[1] - 0.9) < 1e-3);
   assert.ok(j.nodes.some(n => n.name === 'MouseHoleBlock')); assert.ok(tris(j) <= 40000);
 });
 test('textures <=1024 and stl present', () => {

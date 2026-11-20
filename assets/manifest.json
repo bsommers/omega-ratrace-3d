@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-20T11:32:48.268Z",
+ "generated": "2026-11-20T11:36:07.521Z",
  "triBudget": 40000,
  "models": {
   "colby": {
@@ -312,8 +312,8 @@
    "glb": {
     "ok": true,
     "errors": [],
-    "bytes": 2305948,
-    "tris": 1328,
+    "bytes": 2253452,
+    "tris": 1324,
     "meshes": 3,
     "primitives": 3,
     "materials": 2,
@@ -322,36 +322,36 @@
     "namedNodes": 4,
     "meshBboxM": [
      8.4,
-     2.94,
+     1.29,
      3.8
     ]
    },
    "stl": {
     "ok": true,
     "errors": [],
-    "faces": 419810,
-    "verts": 209907,
+    "faces": 298064,
+    "verts": 149034,
     "shells": 1,
     "nonManifoldEdges": 0,
-    "volumeMm3": 487719.33,
+    "volumeMm3": 211367.2,
     "bboxMm": [
      168,
      76,
-     44
+     18
     ],
-    "minWallMm": 11.173
+    "minWallMm": 2.45
    }
   },
   "arena": {
    "glb": {
     "ok": true,
     "errors": [],
-    "bytes": 1793568,
+    "bytes": 1154836,
     "tris": 60,
     "meshes": 5,
     "primitives": 5,
     "materials": 2,
-    "images": 7,
+    "images": 8,
     "nodes": 6,
     "namedNodes": 6,
     "meshBboxM": [

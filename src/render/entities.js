@@ -1,10 +1,20 @@
 // Sim entity <-> mesh sync, pooled by id. Colby banks/flames, mines spin, Death Rat pulses.
 import * as THREE from 'three';
-import { W, H, WORLD_SCALE as S, TICK } from '../core/defs.js';
+import { W, H, WORLD_SCALE as S, TICK, KINDS } from '../core/defs.js';
 
 const HOVER = { colby: 0.12, mouse: 0.0, rat: 0.0, commander: 0.0, deathrat: 0.0, mine: 0.2, tuna: 0.18, yarn: 0.2, hairball: 0.2, ebullet: 0.2 };
 const MODEL_OF = { hairball: 'hairball', ebullet: 'hairball', mine: 'mine', tuna: 'tuna' };
 const VIS = 2.5; // visual enlargement vs sim radius so ships/mice read at arena scale (integrate)
+// soft blob contact shadow texture (radial alpha falloff)
+let _blob = null;
+function blobTex() {
+  if (_blob) return _blob;
+  if (typeof document === 'undefined') return null;
+  const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+  const g = x.createRadialGradient(32, 32, 2, 32, 32, 31); g.addColorStop(0, 'rgba(0,0,0,0.75)'); g.addColorStop(0.6, 'rgba(0,0,0,0.35)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+  x.fillStyle = g; x.fillRect(0, 0, 64, 64);
+  _blob = new THREE.CanvasTexture(c); return _blob;
+}
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
 export function createEntities(parent, models) {
@@ -21,17 +31,24 @@ export function createEntities(parent, models) {
       const obj = models.instance(name);
       let flame = null; obj.traverse(o => { if (!flame && o.name === 'Flame') flame = o; });
       const mats = []; obj.traverse(o => { if (o.isMesh && o.material?.emissive) mats.push(o.material); });
+      if (name === 'colby') obj.traverse(o => { if (o.isMesh && o.material?.emissive && !(flame && flame.getObjectById(o.id))) { o.material.emissiveIntensity *= 0.45; o.material.envMapIntensity = 1.4; } });
       rec = { obj, name, flame, mats, base: mats.map(m => m.emissiveIntensity), baseScale: obj.scale.clone().multiplyScalar(VIS) };
       group.add(obj);
+      const bt = blobTex(); let sh = null;
+      if (bt) {
+        sh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: bt, transparent: true, depthWrite: false, opacity: 0.9 }));
+        sh.rotation.x = -Math.PI / 2; sh.renderOrder = 1; sh.name = 'contactShadow'; group.add(sh);
+      }
+      rec.sh = sh;
     }
-    rec.id = id; rec.kind = kind; rec.obj.visible = true; rec.phase = (typeof id === 'number' ? id : 0) * 1.7;
+    rec.id = id; rec.kind = kind; rec.obj.visible = true; if (rec.sh) rec.sh.visible = true; rec.phase = (typeof id === 'number' ? id : 0) * 1.7;
     if (kind === 'ebullet') rec.obj.scale.copy(rec.baseScale).multiplyScalar(0.8);
     else rec.obj.scale.copy(rec.baseScale);
     live.set(id, rec); return rec;
   }
   function release(id) {
     const rec = live.get(id); if (!rec) return;
-    rec.obj.visible = false; live.delete(id);
+    rec.obj.visible = false; if (rec.sh) rec.sh.visible = false; live.delete(id);
     (free.get(rec.name) || free.set(rec.name, []).get(rec.name)).push(rec);
   }
   function place(rec, e, alpha, t) {
@@ -40,6 +57,7 @@ export function createEntities(parent, models) {
     const hover = HOVER[rec.kind] ?? 0;
     rec.obj.position.set(x * S - W * S / 2, hover + (rec.kind === 'tuna' ? Math.sin(t * 3 + rec.phase) * 0.04 : 0), y * S - H * S / 2);
     rec.obj.rotation.set(0, -(e.angle ?? Math.atan2(e.vy || 0, e.vx || 0)), 0);
+    if (rec.sh) { const R = (KINDS[rec.kind]?.r || 10) * S * VIS * (1.5 + hover * 1.5); rec.sh.position.set(rec.obj.position.x + 0.03, 0.012, rec.obj.position.z + 0.05); rec.sh.scale.set(R, R, 1); rec.sh.material.opacity = 0.9 / (1 + hover * 3); }
   }
 
   function sync(g, alpha, dt, t) {
@@ -63,7 +81,7 @@ export function createEntities(parent, models) {
           rec.flame.visible = st.flame > 0.03; rec.flame.scale.set(Math.max(0.05, f * 1.2), 0.4 + f * 0.7, 0.4 + f * 0.7);
         }
         // invulnerability blink
-        rec.obj.visible = !(s.invuln > 0 && Math.floor(t * 14) % 2 === 0);
+        rec.obj.visible = !(s.invuln > 0 && Math.floor(t * 14) % 2 === 0); if (rec.sh) rec.sh.visible = rec.obj.visible;
       });
     } else st.prevAngle = null;
     for (const e of g.ents) {

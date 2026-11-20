@@ -44,7 +44,7 @@ export function build(scene, renderer, { quality = 'high' } = {}) {
     envRT = pm.fromScene(makeEnvScene(), 0.02);
     pm.dispose();
     scene.environment = envRT.texture;
-    scene.environmentIntensity = 0.55;
+    scene.environmentIntensity = 0.8;
   } catch (e) { console.warn('[lighting] PMREM failed', e); }
   if (!scene.background) scene.background = new THREE.Color(0x05030c);
 

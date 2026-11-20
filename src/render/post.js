@@ -11,7 +11,7 @@ import { configFor, normalizeQuality, createAutoQuality } from './quality.js';
 import { getSettings } from '../core/settings.js';
 
 const GradeShader = {
-  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uVignette: { value: 0.35 }, uCA: { value: 0.0016 }, uGrain: { value: 0.035 }, uSat: { value: 1.12 }, uContrast: { value: 1.06 } },
+  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uVignette: { value: 0.3 }, uCA: { value: 0.0004 }, uGrain: { value: 0.008 }, uSat: { value: 1.12 }, uContrast: { value: 1.06 } },
   vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
   fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime,uVignette,uCA,uGrain,uSat,uContrast; varying vec2 vUv;
     float hash(vec2 p){ return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453); }
