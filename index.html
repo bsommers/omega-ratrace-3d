@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Omega Ratrace 3D</title>
+  <meta name="theme-color" content="#07050f">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three/build/three.module.js",
+      "three/addons/": "./vendor/three/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <canvas id="game" aria-label="Omega Ratrace 3D game view"></canvas>
+  <div id="ui">
+    <div id="loading" class="loading">
+      <div class="loading-title">OMEGA RATRACE 3D</div>
+      <div class="loading-sub">loading&hellip;</div>
+    </div>
+    <noscript><div class="loading-sub">This game needs JavaScript and WebGL.</div></noscript>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

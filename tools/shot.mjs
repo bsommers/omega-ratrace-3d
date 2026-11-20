@@ -4,12 +4,11 @@
 //   [--eval "<js>"] [--keys "w:800,ArrowLeft:300"] [--click x,y] [--frames N --interval ms] [--timeout ms] [--strict]
 //   [--gpu vulkan|gl|swiftshader|none] [--chrome path]
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { startStatic, REPO_ROOT } from './serve.mjs';
 
-const SCRATCH = process.env.SCRATCH || path.join(os.tmpdir(), 'game-shot');
+const SCRATCH = process.env.SCRATCH || path.join(process.env.CLAUDE_CODE_TMPDIR || '/datanapps/claude-tmp', 'game-shot');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function parseArgs(argv) {
@@ -112,7 +111,7 @@ async function main() {
     result.url = url;
 
     fs.mkdirSync(SCRATCH, { recursive: true });
-    profile = fs.mkdtempSync(path.join(fs.existsSync(SCRATCH) ? SCRATCH : os.tmpdir(), 'shot-profile-'));
+    profile = fs.mkdtempSync(path.join(SCRATCH, 'shot-profile-'));
     const chromeBin = o.chrome ?? ['google-chrome', 'google-chrome-stable', 'chromium', 'chromium-browser'].map(n => ['/usr/bin/', '/usr/local/bin/'].map(d => d + n).find(p => fs.existsSync(p))).find(Boolean) ?? 'google-chrome';
     const args = ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`, '--no-first-run', '--no-default-browser-check',
       '--disable-background-timer-throttling', '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows',
