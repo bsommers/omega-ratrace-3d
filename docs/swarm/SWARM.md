@@ -72,6 +72,10 @@ Implement ARCHITECTURE §9-style audio from the 2D game’s contract: WebAudio s
 owns: index.html, style.css, src/main.js, src/core/input.js, src/ui/hud.js, src/ui/screens.js, src/ui/menus.js, src/ui/font.js
 (index.html/style.css are first created by vendor-three; you then extend them.) Wire main.js: fixed-step loop, createGame + renderer + audio + HUD; keyboard (arrows/WASD rotate+thrust, Space fire, X bomb, P pause, M mute), gamepad, touch; DOM/CSS HUD (score, hi, lives as cat heads, bombs, wave, combo, taunt bubbles), title/pause/options (quality, volume)/gameover with initials (localStorage), URL params `autostart seed wave quality bot debug mute`.
 
+## models-v2 | sonnet | p3 | asset | Photoreal model pass
+owns: tools/blender/colby.py, tools/blender/mice.py, assets/models/colby.glb, assets/models/mouse.glb, assets/models/rat.glb, assets/models/commander.glb, assets/models/deathrat.glb, assets/print/colby.stl, assets/print/mouse.stl, assets/print/rat.stl, assets/print/commander.stl, assets/print/deathrat.stl
+Current models are smooth stylised ellipsoids (see out/previews/colby.png, commander.png). Rebuild for photoreal: Colby with a proper cat silhouette (head with muzzle, haunches, four paws tucked in flight, curved tail ending in the engine flame), real fur (particle hair baked to cards or dense strand geometry plus fur-shader PBR with sheen) in Colby Jack marbling; mice/rats with sculpted heads, hair, translucent ears, glossy wet eyes, thin tails. Fix mouse size to about 0.2 m body (radius KINDS.r*0.02, tail excluded from the collision size). Keep GLB nodes (Flame, Armed, etc.), triangle budget, +X nose, and watertight single-shell STL. Update test/blender-*.test.mjs accordingly.
+
 ## qa-bot | sonnet | p3 | qa | Autopilot and bot tests
 owns: src/sim/autopilot.js, tools/botplay.mjs
 Deterministic autopilot (aim at nearest threat, thrust to dodge, fire) and `tools/botplay.mjs --waves N --seed S` reporting waves reached, deaths, score, state hash; proves determinism and that waves 1-5 are survivable but not trivial; flags tuning problems.
