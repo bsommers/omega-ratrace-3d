@@ -32,7 +32,7 @@ export const KINDS = Object.freeze({
   ebullet:   { r: 4,  hp: 1,  score: 0,   speed: 210, desc: 'Enemy cheese pellet' },
 });
 
-// Blender-authored models, assets/models/<name>.glb (Y-up, metres, origin at centre, nose along -Z, see ARCHITECTURE §7).
+// Blender-authored models, assets/models/<name>.glb (Y-up, metres, origin at centre, nose along +X, see ARCHITECTURE §6-7).
 export const MODELS = Object.freeze(['colby', 'mouse', 'rat', 'commander', 'deathrat', 'mine', 'tuna', 'yarn', 'hairball', 'mousehole', 'arena']);
 export const SFX = Object.freeze(['thrust', 'fire', 'bounce', 'hit', 'boom_small', 'boom_big', 'mine_burst', 'ebullet', 'pickup', 'bomb', 'death',
   'wave_start', 'wave_clear', 'extralife', 'deathrat_warn', 'menu_move', 'menu_select', 'gameover', 'hiscore', 'launch']);
