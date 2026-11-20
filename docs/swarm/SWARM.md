@@ -1,51 +1,89 @@
-# Swarm manifest — <project>
+# Swarm manifest — Omega Ratrace 3D
 
-Single source of truth for the agent swarm. `node <tracker>/bin/swarm-plan.mjs` turns this file into
-`docs/swarm/prompts/<id>.md` (preamble + task + role appendix) and `.tracker/plan.json`.
-Agent header: `## id | model | phase | role | Name`, then an `owns:` line, then the task.
-Spawn each agent with: "Read {{root}}/docs/swarm/prompts/<id>.md and execute it exactly."
+`node tools/swarm-tracker/bin/swarm-plan.mjs` -> `docs/swarm/prompts/<id>.md` + `.tracker/plan.json`.
+Spawn each agent with: "Read {{root}}/docs/swarm/prompts/<id>.md and execute it exactly." Max 4 concurrent. Waves: p1 (foundation) -> p2 (render/ui/audio/assets) -> p3 (integration, QA, docs).
 
 ## @meta
-project: My Project
-tagline: One line about what is being built
+project: Omega Ratrace 3D
+tagline: Photoreal 3D Omega Race. Colby the cat vs the rats of the Mouse Hole. three.js + Blender.
 
 ## @preamble
-You are subagent `{{id}}` ({{name}}) in a parallel swarm building **<project>** in `{{root}}`. Model tier: {{model}}.
+You are subagent `{{id}}` ({{name}}) in a parallel swarm building **Omega Ratrace 3D** in `{{root}}`. Model tier: {{model}}.
 
 Rules:
-1. `ARCHITECTURE.md` (and any shared definitions file) is the binding contract. Read only what your task needs: list the
-   sections (`grep -n '^## ' ARCHITECTURE.md`), Read those with offset/limit, grep shared files instead of reading them whole.
-2. You own ONLY: {{owns}}. Besides those you may write your tests under `test/`, your report, and scratch output.
-   Other agents are writing other modules **right now**: their files may be missing or half-written. Code against the
-   contract, guard with fallbacks, never edit a file you do not own; list what you need under "Requests" in your report.
-3. Progress reporting (drives a live dashboard): first `node <tracker>/bin/track.mjs {{id}} start "<plan in a few words>"`;
-   then `track.mjs {{id}} progress <pct> "<what just landed>"` at 4 or more milestones; finally
-   `track.mjs {{id}} done "<one-line result>"` (or `blocked` / `failed` with the reason). Run from {{root}} or set TRACKER_ROOT.
-4. Verify for real before claiming done: run it, test it, look at it. Report failures honestly.
-5. If you must wait for another agent's file, poll (`for i in $(seq 90); do [ -f <path> ] && break; sleep 10; done`),
-   then proceed with a fallback if it still is not there.
-6. Finish by writing `docs/swarm/reports/{{id}}.md` with sections: **What I built** · **Verification evidence** ·
-   **Deviations from the contract** · **Mistakes I made and how I fixed them** · **Learnings for a future agent** ·
-   **Requests for other modules**. Report shared-library defects here too, do not only work around them.
-7. Keep chat output minimal (status lines only). Final reply: 8 lines max.
-8. Save work to disk early and often; the swarm can be interrupted by usage limits. If your owned files already exist,
-   you are RESUMING: inspect them and continue instead of starting over.
-9. Install no new dependencies. No git commands unless told. Never kill processes you did not start.
-10. Context budget — your whole context is re-sent on every tool call, so keep it small: read files with offset/limit
-    or grep, never whole large files; pipe command output through `tail`/`grep` (40 lines max); look at an image only
-    when you will act on it (about 6 in total; prefer numeric checks); never re-read a file you just wrote.
-11. Checkpoints — keep `docs/swarm/progress/{{id}}.md` (30 lines max: **Done** · **Next steps, in order** ·
-    **Gotchas** · **Commands to verify**) and update it at every milestone. If it exists when you start, you are a fresh
-    agent continuing the job: read it first, trust it, do not re-derive. After about 25 tool calls, or at a milestone with
-    substantial work left, update the checkpoint and END your turn with a last line `CONTINUE: <next step>`. Only write
-    the report and call `track.mjs ... done` when the whole task is finished.
-12. Stamp times with `date -u`; never type a timestamp.
+1. `ARCHITECTURE.md` and `src/core/defs.js` are the binding contract. List sections (`grep -n '^## ' ARCHITECTURE.md`), read only what you need with offset/limit.
+2. You own ONLY: {{owns}}. Besides those you may write tests `test/{{id}}.test.mjs`, your report, and scratch output. Others write other modules right now: code against the contract, guard with fallbacks, never edit files you do not own; put needs under "Requests" in your report.
+3. Progress: `node tools/swarm-tracker/bin/track.mjs {{id}} start "<plan>"`, then `progress <pct> "<msg>"` at 4+ milestones, finally `done "<result>"` (or `blocked`/`failed`). Run from {{root}}.
+4. Verify for real: run it, test it, look at it (screenshots via `node tools/shot.mjs`). Report failures honestly.
+5. If waiting on another agent's file, poll `for i in $(seq 90); do [ -f <path> ] && break; sleep 10; done`, then use a fallback.
+6. Finish with `docs/swarm/reports/{{id}}.md`: What I built · Verification evidence · Deviations · Mistakes and fixes · Learnings · Requests. Report shared-code defects.
+7. Chat output minimal. Final reply 8 lines max.
+8. Save early. If your owned files exist you are RESUMING: inspect and continue.
+9. No new dependencies beyond vendored three.js. NO git commands (orchestrator commits). Never kill processes you did not start.
+10. Context budget: read with offset/limit or grep, pipe output through tail/grep (40 lines max), view images only when acting on them (~6 total).
+11. Keep `docs/swarm/progress/{{id}}.md` (30 lines: Done · Next · Gotchas · Verify). After ~25 tool calls with work left, update it and END with `CONTINUE: <next step>`.
+12. Stamp times with `date -u`. Temp/build/render output goes under /datanapps/claude-tmp or out/, NEVER /tmp. Blender: `/snap/bin/blender -b -P script.py`.
 
 Your task:
 
-## @role:example
-Role appendix: text added to the end of every prompt whose agent has role `example`. Delete if unused.
+## @role:asset
+Role appendix: Blender-authored assets. Deliver glTF 2.0 .glb (PBR, named nodes, centred origin, size/orientation per ARCHITECTURE §6-7) AND watertight single-shell STL under assets/print/ (mm). Reuse patterns from ~/src/fun/game-factory/examples/ratops/blender/*.py and tools/print/print_export.py. Colby Jack cat look: marbled orange/cream. Render a preview PNG with EEVEE/Workbench (<=3 min) to out/previews/<name>.png and look at it at most twice. Scripts must be deterministic and re-runnable.
 
-## hello | sonnet | p1 | example | Hello module
-owns: src/hello.js, test/hello.test.js
-Write `src/hello.js` exporting `hello(name)` per the contract, with a test.
+## @role:code
+Role appendix: ES modules, Node-safe unless in src/render|ui|audio. Keep files <600 lines. Unit-test with node:test.
+
+## vendor-three | haiku | p1 | tooling | Vendor three.js
+owns: vendor/, index.html, style.css, tools/serve.mjs, tools/shot.mjs
+Vendor three.js 0.187.0 into `vendor/three/` (get it with `npm pack three@0.187.0` inside /datanapps/claude-tmp/three, extract there, copy only build/three.module.js, build/three.core.js and the needed examples/jsm addons per ARCHITECTURE §2 incl. their relative deps). Write `index.html` with importmap (`three`, `three/addons/`), a full-window `<canvas id=game>`, overlay `<div id=ui>`, loading `src/main.js`; `style.css` dark neon. Make serve.mjs serve `.glb`, `.js`, `.json`, `.wasm` with correct MIME. Prove WebGL works in headless Chrome: a temp page rendering a lit PBR sphere via `tools/shot.mjs` (add swiftshader flags if needed) -> out/shots/webgl-ok.png. Document the exact working flags in your report.
+
+## sim-core | sonnet | p1 | sim | Simulation core
+owns: src/sim/game.js, src/sim/player.js, src/sim/shots.js, src/sim/collide.js, src/sim/score.js, src/sim/waves.js
+Implement ARCHITECTURE §4: ship physics (rotate/thrust/drag/maxSpeed, bounce off arena rect and BOX, hairballs with one ricochet), collisions (circle vs circle/rect), lives/invuln/dying/respawn, yarn bomb, score/combo/extra lives, wave flow (intro → play → waveclear → next) with `buildWave(n, rng)` (difficulty ramp; Death Rat after TUNING.deathRatAfter), entity pool, events on the bus, state hash helper `g.hash()`. Call `BEHAVIORS[kind]` from `./enemies.js` (owned by sim-enemies; stub-guard if missing: `import * as E` in try/dynamic fallback not allowed, so export a `setBehaviors(map)` and default to an empty map; main wires it). Tests: determinism (same seed ⇒ same hash over 3000 ticks), bounce, shot ricochet, extra life, wave progression.
+
+## sim-enemies | sonnet | p1 | sim | Enemy behaviours
+owns: src/sim/enemies.js
+Implement `BEHAVIORS` for mouse, rat (wall-aware homing), commander (slow, aimed cheese-pellet bursts, drops tuna on death), mine (drift, arm, burst into 6 crumb ebullets), deathrat (fast hunter, unkillable), tuna (pickup, 8 s expiry), per ARCHITECTURE §4 and defs.KINDS. Pure functions of (entity, dt, g); use `g.rng` only. Include a mock-`g` test harness in test/sim-enemies.test.mjs. Export `BEHAVIORS`.
+
+## blender-colby | sonnet | p1 | asset | Colby ship model
+owns: tools/blender/colby.py, assets/models/colby.glb, assets/print/colby.stl
+Hero: Colby the cat as a sleek space-ship (cat body, ears, whiskers, tail as engine flame cone with emissive material, glass visor, subtle fur via normal/roughness bake). Marbled orange/cream Colby Jack fur. Photoreal PBR (fur sheen), ~0.44 m long, nose along +X. Provide a separate named node `Flame` (emissive) so the renderer can scale it with thrust. Print STL: single watertight shell, simplified (whiskers dropped or thickened to >=1.2 mm).
+
+## blender-mice | sonnet | p1 | asset | Mice, rats and props
+owns: tools/blender/mice.py, tools/blender/props.py, assets/models/mouse.glb, assets/models/rat.glb, assets/models/commander.glb, assets/models/deathrat.glb, assets/models/mine.glb, assets/models/tuna.glb, assets/models/yarn.glb, assets/models/hairball.glb, assets/print/
+Photoreal mouse (grey-lilac, pink ears/tail, glossy eyes, whiskers), rat (bigger, purple-grey), commander (rat with epaulets + cheese-wedge badge), deathrat (black fur, red glowing eyes, larger), mine (Swiss cheese wheel, emissive armed light node `Armed`), tuna tin pickup, yarn ball, hairball (small emissive sphere). Sizes per ARCHITECTURE §6 (radius ≈ defs.KINDS[k].r*0.02 m). STL for the six characters/props that can be printed.
+
+## render-scene | sonnet | p2 | render | Scene, camera, arena, entities
+owns: src/render/renderer.js, src/render/scene.js, src/render/arena.js, src/render/entities.js, src/render/camera.js
+Implement ARCHITECTURE §5-6: renderer, tilted camera with shake and subtle drift, procedural arena (glossy floor with cheese texture, neon-edged outer rail walls, central Mouse Hole box; use assets/models/arena.glb and mousehole.glb if present), GLB loader with primitive fallbacks, id-pooled entity meshes (Colby banks and scales `Flame` with thrust; spin on mines; Death Rat pulses), shadows, integration with render-post modules when present (dynamic import guarded by try/catch).
+
+## render-post | sonnet | p2 | render | Lighting, post, FX
+owns: src/render/lighting.js, src/render/post.js, src/render/fx.js, src/render/quality.js
+Implement the render-post exports from ARCHITECTURE §5: procedural HDR environment (PMREM), key light + neon rim lights with soft shadows, composer chain (GTAO, bloom, grade/vignette/chromatic aberration/grain, ACES via OutputPass, SMAA), quality tiers with auto-downgrade on low FPS, GPU particle FX for all `defs.FX_TYPES`. Test via a temp page + tools/shot.mjs.
+
+## blender-arena | sonnet | p2 | asset | Arena and Mouse Hole
+owns: tools/blender/arena.py, assets/models/arena.glb, assets/models/mousehole.glb, assets/textures/
+Arena floor/rail walls (800x450 logical → 16 x 9 m, centre origin) with tiled PBR cheese-and-brushed-metal textures baked ≤1024² (albedo, normal, roughness, emissive neon strip), and the central Mouse Hole box (BOX 420x190 → 8.4 x 3.8 m) styled as a giant cheese block with a mouse-hole arch where enemies spawn.
+
+## audio | sonnet | p2 | audio | Audio synth
+owns: src/audio/audio.js, src/audio/sfx.js, src/audio/music.js
+Implement ARCHITECTURE §9-style audio from the 2D game’s contract: WebAudio synthesis only, every name in defs.SFX and defs.MUSIC, `createAudio({bus}) → {resume,setVolume,play,music,muted}`, Node-importable with offline stub, spatial pan from `x`. Music loops ≥16 bars, synthwave feel.
+
+## ui-shell | sonnet | p2 | ui | UI, input, main
+owns: index.html, style.css, src/main.js, src/core/input.js, src/ui/hud.js, src/ui/screens.js, src/ui/menus.js, src/ui/font.js
+(index.html/style.css are first created by vendor-three; you then extend them.) Wire main.js: fixed-step loop, createGame + renderer + audio + HUD; keyboard (arrows/WASD rotate+thrust, Space fire, X bomb, P pause, M mute), gamepad, touch; DOM/CSS HUD (score, hi, lives as cat heads, bombs, wave, combo, taunt bubbles), title/pause/options (quality, volume)/gameover with initials (localStorage), URL params `autostart seed wave quality bot debug mute`.
+
+## qa-bot | sonnet | p3 | qa | Autopilot and bot tests
+owns: src/sim/autopilot.js, tools/botplay.mjs
+Deterministic autopilot (aim at nearest threat, thrust to dodge, fire) and `tools/botplay.mjs --waves N --seed S` reporting waves reached, deaths, score, state hash; proves determinism and that waves 1-5 are survivable but not trivial; flags tuning problems.
+
+## asset-validate | sonnet | p3 | qa | Asset validation
+owns: tools/validate-assets.mjs, tools/blender/validate.py, assets/manifest.json
+Per ARCHITECTURE §7: Blender-headless validator (re-import every assets/print/*.stl: single shell, manifold, positive volume, bbox, min-wall estimate) and Node GLB structural checker (magic, JSON chunk, accessor bounds, triangle budget, all MODELS present). Write assets/manifest.json + a table into docs/ASSETS.md. Exit non-zero on failure.
+
+## integrate | sonnet | p3 | integration | Integration and polish
+owns: docs/INTEGRATION-NOTES.md, tools/build-web.mjs
+Wire everything, run `npm test`, `node tools/check-imports.mjs`, botplay, screenshots at low/high/ultra; fix cross-module contract drift by minimal edits (you may edit any file; record each edit in the notes). Build single deployable `dist/web/` with assets via tools/build-web.mjs. Confirm 60 fps target on `high` where hardware allows, report numbers.
+
+## review | sonnet | p3 | review | Code and docs review
+owns: README.md, docs/HOW-TO-PLAY.md, docs/LEARNINGS.md
+Review the whole repo for bugs/contract drift (read-only except owned docs), write README (screens, controls, quality tiers, asset pipeline, tracker, layout), HOW-TO-PLAY, and LEARNINGS. Report findings you did not fix in docs/swarm/reports/review.md.
