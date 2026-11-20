@@ -31,7 +31,7 @@ Colby has a hull per life. Any hit (enemy, pellet, mine, Death Rat) removes 1 hu
 
 | Level | Hull |
 |---|---|
-| hard | 3 |
+| hard | 4 |
 | normal (default) | 5 |
 | easy | 8 |
 | kitten | 13 |
