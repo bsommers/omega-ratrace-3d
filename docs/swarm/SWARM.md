@@ -85,8 +85,8 @@ owns: tools/validate-assets.mjs, tools/blender/validate.py, assets/manifest.json
 Per ARCHITECTURE §7: Blender-headless validator (re-import every assets/print/*.stl: single shell, manifold, positive volume, bbox, min-wall estimate) and Node GLB structural checker (magic, JSON chunk, accessor bounds, triangle budget, all MODELS present). Write assets/manifest.json + a table into docs/ASSETS.md. Exit non-zero on failure.
 
 ## integrate | sonnet | p3 | integration | Integration and polish
-owns: docs/INTEGRATION-NOTES.md, tools/build-web.mjs
-Wire everything (render-post requests to render-scene: on resize call fx.setViewportHeight(canvas.clientHeight) and post.resize(w,h); call lighting.setQuality/fx.setQuality along with post.setQuality; set castShadow/receiveShadow on meshes; verify sim-enemies against the real game.js and main calls setBehaviors(BEHAVIORS)), run `npm test`, `node tools/check-imports.mjs`, botplay, screenshots at low/high/ultra; fix cross-module contract drift by minimal edits (you may edit any file; record each edit in the notes). Build single deployable `dist/web/` with assets via tools/build-web.mjs. Confirm 60 fps target on `high` where hardware allows, report numbers.
+owns: docs/INTEGRATION-NOTES.md
+Wire everything (render-post requests to render-scene: on resize call fx.setViewportHeight(canvas.clientHeight) and post.resize(w,h); call lighting.setQuality/fx.setQuality along with post.setQuality; set castShadow/receiveShadow on meshes; verify sim-enemies against the real game.js and main calls setBehaviors(BEHAVIORS)), run `npm test`, `node tools/check-imports.mjs`, botplay, screenshots at low/high/ultra; fix cross-module contract drift by minimal edits (you may edit any file; record each edit in the notes). (The web build tool is owned by `site` in p4.) Confirm 60 fps target on `high` where hardware allows, report numbers.
 
 ## screenshots | sonnet | p4 | docs | Release screenshots
 owns: docs/screenshots/, docs/site/img/, tools/capture-screens.mjs
