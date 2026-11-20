@@ -23,7 +23,7 @@ export const TUNING = Object.freeze({
 
 // 3D-only deviation from the 2D game (TUNING default there = 1 hit). `classic` = 2D-compatible, hidden from the menu.
 export const DIFFICULTY = Object.freeze({
-  hard: Object.freeze({ hull: 4 }), normal: Object.freeze({ hull: 5 }), easy: Object.freeze({ hull: 8 }), kitten: Object.freeze({ hull: 13 }),
+  hard: Object.freeze({ hull: 4 }), normal: Object.freeze({ hull: 6 }), easy: Object.freeze({ hull: 8 }), kitten: Object.freeze({ hull: 13 }),
   classic: Object.freeze({ hull: 1, hidden: true }),
 });
 export const DIFFICULTY_DEFAULT = 'normal';

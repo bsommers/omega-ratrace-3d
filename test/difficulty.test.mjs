@@ -8,21 +8,21 @@ const touch = (g, kind = 'mouse') => { const s = g.ship; g.spawn(kind, { x: s.x,
 const wait = (g, sec) => { for (let i = 0; i < Math.ceil(sec / TICK); i++) g.update(TICK, {}); };
 
 test('hull per level + default normal', () => {
-  for (const [k, v] of Object.entries({ hard: 4, normal: 5, easy: 8, kitten: 13, classic: 1 })) {
+  for (const [k, v] of Object.entries({ hard: 4, normal: 6, easy: 8, kitten: 13, classic: 1 })) {
     const g = createGame({ difficulty: k }); assert.equal(g.ship.hull, v); assert.equal(g.ship.hullMax, v); assert.equal(DIFFICULTY[k].hull, v);
   }
-  assert.equal(createGame().ship.hullMax, 5);
-  assert.equal(createGame({ difficulty: 'bogus' }).ship.hullMax, 5);
+  assert.equal(createGame().ship.hullMax, 6);
+  assert.equal(createGame({ difficulty: 'bogus' }).ship.hullMax, 6);
 });
 
 test('hit removes 1 hull and grants ~1s invulnerability', () => {
   const g = mk('normal'); const ev = [];
   g.bus.on('sfx', p => ev.push(p.name));
   touch(g);
-  assert.equal(g.ship.hull, 4); assert.equal(g.lives, 3); assert.ok(g.ship.alive);
+  assert.equal(g.ship.hull, 5); assert.equal(g.lives, 3); assert.ok(g.ship.alive);
   assert.ok(g.ship.invuln > 0.9 && g.ship.invuln <= 1.0); assert.ok(ev.includes('hit'));
-  touch(g); assert.equal(g.ship.hull, 4); // within invuln window
-  wait(g, 1.05); touch(g); assert.equal(g.ship.hull, 3);
+  touch(g); assert.equal(g.ship.hull, 5); // within invuln window
+  wait(g, 1.05); touch(g); assert.equal(g.ship.hull, 4);
 });
 
 test('life lost only at 0 hull; refill on respawn', () => {
@@ -42,7 +42,8 @@ test('all levels take exactly hull hits to die', () => {
 });
 
 test('deathrat removes 2 hull, leaves 1, kills at 1', () => {
-  const g = mk('normal'); touch(g, 'deathrat'); assert.equal(g.ship.hull, 3);
+  const g = mk('normal'); touch(g, 'deathrat'); assert.equal(g.ship.hull, 4);
+  wait(g, 1.05); touch(g, 'deathrat'); assert.equal(g.ship.hull, 2);
   wait(g, 1.05); touch(g, 'deathrat'); assert.equal(g.ship.hull, 1); assert.equal(g.state, 'play');
   wait(g, 1.05); touch(g, 'deathrat'); assert.equal(g.state, 'dying');
   const h = mk('hard'); touch(h, 'deathrat'); assert.equal(h.ship.hull, 2); // 4 -> 2

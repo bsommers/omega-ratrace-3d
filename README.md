@@ -52,7 +52,7 @@ See [docs/HOW-TO-PLAY.md](docs/HOW-TO-PLAY.md).
 | `seed=N` | deterministic RNG seed |
 | `wave=N` | start at wave N |
 | `quality=low\|medium\|high\|ultra` | render tier (default high) |
-| `difficulty=hard\|normal\|easy\|kitten` | hull hits before a life is lost: 4 / 5 / 8 / 13 (default normal; also `classic` = 1 hit, 2D rules, hidden from menu) |
+| `difficulty=hard\|normal\|easy\|kitten` | hull hits before a life is lost: 4 / 6 / 8 / 13 (default normal; also `classic` = 1 hit, 2D rules, hidden from menu) |
 | `bot=1` | autopilot plays |
 | `debug=1` | FPS overlay |
 | `mute=1` | start muted |
