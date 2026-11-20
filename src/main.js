@@ -3,7 +3,9 @@ import { TICK, W, H, PALETTE } from './core/defs.js';
 import { createBus } from './core/events.js';
 import { getSettings, setSettings } from './core/settings.js';
 import { createInput, isTouchDevice } from './core/input.js';
-import { createGame } from './sim/game.js';
+import { createGame, setBehaviors } from './sim/game.js';
+import { BEHAVIORS } from './sim/enemies.js';
+setBehaviors(BEHAVIORS);
 import { createHud } from './ui/hud.js';
 import { createScreens } from './ui/screens.js';
 import { createOptions } from './ui/menus.js';
@@ -86,6 +88,7 @@ async function boot() {
   addEventListener('blur', () => setPaused(true));
   document.addEventListener('visibilitychange', () => { if (document.hidden) setPaused(true); last = performance.now(); });
   addEventListener('resize', () => renderer.resize?.());
+  addEventListener('orientationchange', () => setTimeout(() => renderer.resize?.(), 200));
   renderer.resize?.();
 
   newGame(); document.getElementById('loading')?.remove();

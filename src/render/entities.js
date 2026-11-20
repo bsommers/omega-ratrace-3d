@@ -4,6 +4,7 @@ import { W, H, WORLD_SCALE as S, TICK } from '../core/defs.js';
 
 const HOVER = { colby: 0.12, mouse: 0.0, rat: 0.0, commander: 0.0, deathrat: 0.0, mine: 0.2, tuna: 0.18, yarn: 0.2, hairball: 0.2, ebullet: 0.2 };
 const MODEL_OF = { hairball: 'hairball', ebullet: 'hairball', mine: 'mine', tuna: 'tuna' };
+const VIS = 2.5; // visual enlargement vs sim radius so ships/mice read at arena scale (integrate)
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
 export function createEntities(parent, models) {
@@ -20,7 +21,7 @@ export function createEntities(parent, models) {
       const obj = models.instance(name);
       let flame = null; obj.traverse(o => { if (!flame && o.name === 'Flame') flame = o; });
       const mats = []; obj.traverse(o => { if (o.isMesh && o.material?.emissive) mats.push(o.material); });
-      rec = { obj, name, flame, mats, base: mats.map(m => m.emissiveIntensity), baseScale: obj.scale.clone() };
+      rec = { obj, name, flame, mats, base: mats.map(m => m.emissiveIntensity), baseScale: obj.scale.clone().multiplyScalar(VIS) };
       group.add(obj);
     }
     rec.id = id; rec.kind = kind; rec.obj.visible = true; rec.phase = (typeof id === 'number' ? id : 0) * 1.7;

@@ -44,7 +44,7 @@ export function createRenderer(canvas, { bus, settings, quality } = {}) {
     const ch = Math.max(1, Math.floor(r.height || canvas.clientHeight || canvas.height || 720));
     w = cw; h = ch;
     renderer.setPixelRatio(pixelRatio); renderer.setSize(cw, ch, false);
-    cam.resize(cw / ch); post?.resize?.(cw, ch);
+    cam.resize(cw / ch); post?.resize?.(cw, ch); fx?.setViewportHeight?.(canvas.clientHeight || ch);
   }
   function setQuality(nq) {
     q = nq || q;
@@ -52,7 +52,7 @@ export function createRenderer(canvas, { bus, settings, quality } = {}) {
     renderer.shadowMap.enabled = q !== 'low';
     renderer.shadowMap.needsUpdate = true;
     scene.traverse(o => { if (o.material) [].concat(o.material).forEach(m => { m.needsUpdate = true; }); });
-    post?.setQuality?.(q); if (w) resize();
+    post?.setQuality?.(q); lighting?.setQuality?.(q); fx?.setQuality?.(q); if (w) resize();
   }
   function draw(g, alpha = 1, dt = 1 / 60) {
     t += dt;

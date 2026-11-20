@@ -42,7 +42,8 @@ for (const n of ['mouse', 'rat', 'commander', 'deathrat', 'mine', 'tuna', 'yarn'
     if (R[n]) {
       const rad = R[n] * WS;
       assert.ok(hi[0] - lo[0] >= rad && hi[0] - lo[0] <= rad * 4.2, 'x extent ' + (hi[0] - lo[0]));
-      assert.ok(hi[0] >= rad && -lo[0] > hi[0] / 2, 'nose +X, tail -X');
+      if (['mouse', 'rat', 'commander', 'deathrat'].includes(n)) { assert.ok(hi[0] >= 0.4 * rad && hi[0] <= 0.7 * rad, 'nose +X within body half-length ' + hi[0]); assert.ok(-lo[0] > hi[0], 'tail -X'); assert.ok(j.nodes.some(x => x.name === 'Tail'), 'Tail node'); }
+      else assert.ok(hi[0] >= rad && -lo[0] > hi[0] / 2, 'nose +X, tail -X');
     }
     assert.ok(fs.statSync(new URL(`../assets/print/${n}.stl`, import.meta.url)).size > 1000);
     if (n === 'mine') assert.ok(j.nodes.some(x => x.name === 'Armed'));

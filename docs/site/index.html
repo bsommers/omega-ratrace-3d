@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Omega Ratrace 3D - Colby vs the rats, in photoreal 3D</title>
+<meta name="description" content="Omega Race reborn in the Colby Jack cat universe: a photoreal 3D arena shooter with PBR, HDR lighting, shadows and Blender-authored, print-validated models. Play in your browser.">
+<link rel="icon" href="favicon.svg">
+<style>
+:root{--bg:#07050f;--panel:#14102a;--ink:#f3ecff;--mute:#a99cc7;--accent:#f5a623;--accent2:#ff5fa2;--line:#352a5c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header.hero{background:linear-gradient(#24124a,var(--bg));padding:48px 0 32px;text-align:center}
+h1{font:900 clamp(34px,8vw,80px)/1 ui-monospace,monospace;letter-spacing:.04em;margin:0;color:var(--accent);text-shadow:4px 4px 0 var(--accent2)}
+.tag{color:var(--mute);font-size:1.15rem;margin:12px 0 24px}
+.hero img{width:100%;max-width:960px;border:3px solid var(--line);border-radius:8px;box-shadow:0 12px 48px #000a}
+.btn{display:inline-block;background:var(--accent);color:#1b1030;font:800 1.3rem ui-monospace,monospace;padding:14px 34px;border-radius:6px;text-decoration:none;margin:24px 8px 0;box-shadow:0 4px 0 #a86b00}
+.btn.alt{background:transparent;color:var(--ink);border:2px solid var(--line);box-shadow:none}
+section{padding:32px 0}
+h2{font:800 1.7rem ui-monospace,monospace;color:var(--accent2);margin:0 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px}
+.card h3{margin:0 0 6px;color:var(--accent)}
+table{width:100%;border-collapse:collapse;background:var(--panel);font-size:.92rem}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left}
+th{color:var(--accent)}
+.scroll{overflow-x:auto}
+kbd{background:#2a2050;border:1px solid var(--line);border-radius:4px;padding:1px 7px;font-family:ui-monospace,monospace}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.gallery img{width:100%;border:2px solid var(--line);border-radius:6px;background:#000}
+.gallery.wide{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--mute);text-align:center}
+code{color:var(--accent)}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+<h1>OMEGA RATRACE 3D</h1>
+<p class="tag">Colby the marbled cat defends the Omega arena from mice, rats and the dreaded Death Rat. Now photoreal.</p>
+<img src="img/hero.png" alt="Omega Ratrace 3D gameplay: Colby, rats and the cheese Mouse Hole in the arena">
+<div><a class="btn" href="play/">PLAY NOW</a><a class="btn alt" href="#assets">3D-printable models</a></div>
+</div></header>
+
+<main class="wrap">
+<section id="features"><h2>Features</h2><div class="grid">
+<div class="card"><h3>Newtonian cat ship</h3><p>Rotate, thrust and drift. Hairballs ricochet once off the rail walls. Same deterministic feel as the 2D original.</p></div>
+<div class="card"><h3>Waves of vermin</h3><p>Mice, rats, cheese-pellet Commanders and mines. Linger past 42 seconds and the Death Rat comes for you.</p></div>
+<div class="card"><h3>Tuna yarn bomb</h3><p>Grab tuna to earn a yarn bomb that clears the arena. Three lives, one high score.</p></div>
+<div class="card"><h3>Photoreal look</h3><p>PBR materials, HDR image-based lighting, soft shadows, GTAO, bloom, SMAA and a film grade.</p></div>
+<div class="card"><h3>Blender-authored</h3><p>Every model is built procedurally in Blender and validated as a watertight STL and a valid glTF.</p></div>
+<div class="card"><h3>Zero build, zero deps</h3><p>Plain ES modules plus vendored three.js. Runs in any WebGL browser, no install.</p></div>
+</div></section>
+
+<section id="controls"><h2>Controls</h2><div class="scroll"><table>
+<tr><th>Action</th><th>Keyboard</th><th>Touch / gamepad</th></tr>
+<tr><td>Rotate</td><td><kbd>&larr;</kbd> <kbd>&rarr;</kbd> or <kbd>A</kbd> <kbd>D</kbd></td><td>On-screen buttons / stick</td></tr>
+<tr><td>Thrust</td><td><kbd>&uarr;</kbd> or <kbd>W</kbd></td><td>On-screen button / stick</td></tr>
+<tr><td>Fire hairball</td><td><kbd>Space</kbd></td><td>Fire button</td></tr>
+<tr><td>Yarn bomb</td><td><kbd>X</kbd> or <kbd>B</kbd></td><td>Bomb button</td></tr>
+<tr><td>Pause / mute / start</td><td><kbd>P</kbd> or <kbd>Esc</kbd> / <kbd>M</kbd> / <kbd>Enter</kbd></td><td>Gamepad start</td></tr>
+</table></div></section>
+
+<section id="quality"><h2>Quality tiers</h2>
+<p>Pick a tier in the settings menu, or let the game auto-downgrade when the frame rate stays below 40 FPS.</p>
+<div class="scroll"><table>
+<tr><th>Tier</th><th>Post-processing</th><th>Shadows</th><th>Pixel ratio</th><th>Particles</th></tr>
+<tr><td>low</td><td>off</td><td>off</td><td>1.0</td><td>1,024</td></tr>
+<tr><td>medium</td><td>bloom + grade</td><td>1024 px map</td><td>1.0</td><td>2,048</td></tr>
+<tr><td>high</td><td>GTAO + bloom + SMAA + grade</td><td>2048 px map</td><td>1.5</td><td>4,096</td></tr>
+<tr><td>ultra</td><td>full chain, full-res bloom</td><td>4096 px map</td><td>2.0</td><td>8,192</td></tr>
+</table></div></section>
+
+<section id="assets"><h2>Asset pipeline</h2>
+<p>Models are generated by Blender scripts (<code>tools/blender/</code>) and exported twice: a <strong>glTF binary</strong> (<code>.glb</code>, PBR materials, under a 40,000 triangle budget) for the game and a <strong>watertight STL</strong> for 3D printing. <code>tools/validate-assets.mjs</code> checks both (manifold edges, shells, minimum wall thickness, glTF structure) and writes <code>assets/manifest.json</code>.</p>
+<div class="scroll"><table id="asset-table"><tr><th>Model</th><th>glTF</th><th>STL</th></tr>
+<tr><td colspan="3">Loading manifest&hellip;</td></tr></table></div>
+<div class="gallery" id="previews" style="margin-top:16px">
+<img src="img/m-colby.png" alt="Colby" loading="lazy"><img src="img/m-mouse.png" alt="Mouse" loading="lazy"><img src="img/m-rat.png" alt="Rat" loading="lazy"><img src="img/m-commander.png" alt="Commander" loading="lazy"><img src="img/m-deathrat.png" alt="Death Rat" loading="lazy"><img src="img/m-mine.png" alt="Mine" loading="lazy"><img src="img/m-tuna.png" alt="Tuna" loading="lazy"><img src="img/m-yarn.png" alt="Yarn" loading="lazy"><img src="img/m-hairball.png" alt="Hairball" loading="lazy"><img src="img/m-mousehole.png" alt="Mouse Hole" loading="lazy"><img src="img/m-arena.png" alt="Arena" loading="lazy">
+</div>
+<p>Downloads: <a href="play/assets/models/colby.glb">colby.glb</a>, <a href="stl/colby.stl">colby.stl</a>; all files are listed in the table above.</p></section>
+
+<section id="gallery"><h2>Screenshots</h2><div class="gallery wide" id="shots">
+<img src="img/shot-menu.png" alt="Title screen" loading="lazy" onerror="this.remove()">
+<img src="img/shot-play-high.png" alt="Gameplay, high quality" loading="lazy" onerror="this.remove()">
+<img src="img/shot-play-ultra.png" alt="Gameplay, ultra quality" loading="lazy" onerror="this.remove()">
+<img src="img/shot-play-low.png" alt="Gameplay, low quality" loading="lazy" onerror="this.remove()">
+</div></section>
+
+<section id="play"><h2>Play and download</h2>
+<p><a class="btn" href="play/" style="margin-left:0">PLAY IN BROWSER</a></p>
+<p>Run locally: <code>node tools/serve.mjs</code> then open the printed URL. Build the site: <code>node tools/build-site.mjs</code>. Licensed Apache-2.0.</p></section>
+</main>
+<footer>Omega Ratrace 3D &middot; part of the Colby Jack cat universe &middot; Apache-2.0</footer>
+<script>
+fetch('play/assets/manifest.json').then(r=>r.json()).then(m=>{
+  const t=document.getElementById('asset-table');
+  const kb=n=>(n/1024).toFixed(0)+' KB';
+  let h='<tr><th>Model</th><th>glTF</th><th>STL (print)</th></tr>';
+  for(const [n,v] of Object.entries(m.models)){
+    const g=v.glb||{},s=v.stl||{};
+    h+=`<tr><td>${n}</td><td><a href="play/assets/models/${n}.glb">${n}.glb</a> &middot; ${(g.tris||0).toLocaleString()} tris &middot; ${kb(g.bytes||0)}</td>`+
+       `<td><a href="stl/${n}.stl">${n}.stl</a> &middot; ${(s.faces||0).toLocaleString()} faces &middot; ${s.shells??'?'} shell &middot; wall ${s.minWallMm??'?'} mm</td></tr>`;
+  }
+  t.innerHTML=h;
+}).catch(()=>{});
+</script>
+</body>
+</html>

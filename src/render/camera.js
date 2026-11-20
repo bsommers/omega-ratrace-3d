@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { W, H, WORLD_SCALE as S } from '../core/defs.js';
 
-const TILT = 55 * Math.PI / 180; // angle of view direction below horizon
+const TILT = 62 * Math.PI / 180; // angle of view direction below horizon
 
 export function createCamera(aspect = 16 / 9) {
   const camera = new THREE.PerspectiveCamera(40, aspect, 0.1, 200);

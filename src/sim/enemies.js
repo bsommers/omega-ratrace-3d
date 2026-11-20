@@ -55,7 +55,9 @@ export const BEHAVIORS = {
     init(e) {
       if (!e.vx && !e.vy) { const a = e.angle || 0; e.vx = Math.cos(a) * sp('mouse'); e.vy = Math.sin(a) * sp('mouse'); }
     },
-    update(e) { // straight lines; engine bounces. Keep speed constant.
+    update(e, dt = 1 / 60) { // straight lines; engine bounces. Keep speed constant.
+      // integrate: near-vertical lanes (stall in lane behind the box) get a slow sideways drift
+      if (Math.abs(e.vx) < 0.25 * sp('mouse')) e.vx += ((e.vx < 0 || (e.vx === 0 && (e.id | 0) % 2)) ? -1 : 1) * sp('mouse') * 0.5 * dt;
       const s = Math.hypot(e.vx, e.vy);
       if (s < 1e-6) { e.vx = sp('mouse'); e.vy = 0; } else if (Math.abs(s - sp('mouse')) > 0.5) { e.vx *= sp('mouse') / s; e.vy *= sp('mouse') / s; }
     },

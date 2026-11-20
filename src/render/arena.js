@@ -59,7 +59,7 @@ export function buildArena({ models } = {}) {
 
   // Mouse Hole box
   const [bx0, bz0] = toWorld(BOX.x0, BOX.y0), [bx1, bz1] = toWorld(BOX.x1, BOX.y1);
-  const bw = bx1 - bx0, bd = bz1 - bz0, bh = 0.5;
+  const bw = bx1 - bx0, bd = bz1 - bz0, bh = 0.22;
   const box = new THREE.Group(); box.name = 'mousehole'; box.position.set((bx0 + bx1) / 2, 0, (bz0 + bz1) / 2);
   const body = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), new THREE.MeshPhysicalMaterial({ color: 0xb09060, roughness: 0.4, clearcoat: 0.3, map: tex }));
   body.position.y = bh / 2; body.castShadow = body.receiveShadow = true; box.add(body);
@@ -76,6 +76,6 @@ export function buildArena({ models } = {}) {
     const inst = models.instance(name); place?.(inst); parent.add(inst); replace.visible = false;
   };
   upgrade('arena', g, walls);
-  upgrade('mousehole', g, body, (o) => { o.position.copy(box.position); });
+  upgrade('mousehole', g, body, (o) => { o.position.copy(box.position); o.scale.y = 0.3; /* 2.2 m GLB squashed: tall box hid the lane behind it */ });
   return g;
 }
